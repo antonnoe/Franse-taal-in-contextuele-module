@@ -1,10 +1,110 @@
 <!doctype html><meta charset="utf-8">
 <title>Franse taal – contextuele module</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:40px auto">
-  <h1 style="color:#800000;margin:0 0 12px">Franse taal – contextuele module</h1>
-  <ul>
-    <li><a href="./rubriek-telefoongesprek.html">Rubriek: Het telefoongesprek</a></li>
-    <li><a href="./rubriek-shopping.html">Rubriek: Shopping</a></li>
-  </ul>
+<!-- Single-file landing: tegels als knoppen, geen externe libs -->
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:1040px;margin:24px auto;padding:16px;color:#111;">
+  <!-- Header -->
+  <header style="border:1px solid #eee;border-radius:14px;padding:14px 16px;background:#fff;">
+    <h1 style="margin:0 0 6px;color:#800000;font-size:26px;">Franse taal – contextuele module</h1>
+    <p style="margin:4px 0 0;font-size:14.5px;line-height:1.5;">
+      Kies je <strong>hoofdrubriek</strong>, dan je <em>subrubriek/scenario</em>, en oefen gericht met <strong>Doelzinnen</strong>,
+      <strong>Taaltips</strong> (korte begrip-/etiquettetips), <strong>Spreekprompts</strong>, <strong>Micro-lexicon</strong> en een
+      <strong>Pre-flight</strong> checklist. <span style="white-space:nowrap;">Aanspreekvorm: <strong>vous</strong> (default).</span>
+    </p>
+  </header>
+
+  <!-- Tegels / knoppen -->
+  <section aria-label="Hoofdrubrieken"
+           style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:14px;">
+    <!-- 1 Telefoongesprek -->
+    <a href="./rubriek-telefoongesprek.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Het telefoongesprek</div>
+      <div style="color:#333;font-size:14px;">Snel openen, doorverbinden, gegevens dicteren, afspraak bevestigen.</div>
+    </a>
+
+    <!-- 2 Shopping -->
+    <a href="./rubriek-shopping.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Shopping</div>
+      <div style="color:#333;font-size:14px;">Bakker, slager, groenteboer, poelier, visboer, supermarkt, betalen (carte/espèces/chèque).</div>
+    </a>
+
+    <!-- 3 Financieel -->
+    <a href="./rubriek-financieel.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Financieel (bank & betalen)</div>
+      <div style="color:#333;font-size:14px;">Rekening openen, RIB, incasso’s, limieten, kaart/contactloos, problemen oplossen.</div>
+    </a>
+
+    <!-- 4 Huishouden & onderhoud -->
+    <a href="./rubriek-huishouden.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Huishouden & onderhoud</div>
+      <div style="color:#333;font-size:14px;">MRH/RC, internet/box, zwembad, ongedierte (melding + devis), aannemers/leveranciers.</div>
+    </a>
+
+    <!-- 5 Mairie & administratie -->
+    <a href="./rubriek-mairie.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Mairie & administratie</div>
+      <div style="color:#333;font-size:14px;">Justificatifs, attestation, RDV, formulieren, FranceConnect(+), France Services.</div>
+    </a>
+
+    <!-- 6 Gezondheidszorg -->
+    <a href="./rubriek-gezondheid.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Gezondheidszorg</div>
+      <div style="color:#333;font-size:14px;">CPAM/Carte Vitale, mutuelle, huisarts, apotheek, wachtdiensten.</div>
+    </a>
+
+    <!-- 7 Wonen & vastgoed -->
+    <a href="./rubriek-wonen.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Wonen & vastgoed</div>
+      <div style="color:#333;font-size:14px;">Bezichtigen, makelaar/notaris, DPE/diagnostics, servitudes/bornage, copropriété.</div>
+    </a>
+
+    <!-- 8 Auto & mobiliteit -->
+    <a href="./rubriek-auto.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Auto & mobiliteit</div>
+      <div style="color:#333;font-size:14px;">Invoer/carte grise (ANTS), CT/contre-visite, garage & devis, tol/Crit’Air.</div>
+    </a>
+
+    <!-- 9 Buren & sociaal -->
+    <a href="./rubriek-buren.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Buren & sociaal</div>
+      <div style="color:#333;font-size:14px;">Kennismaken, erfgrenzen afstemmen, kleine verzoeken, uitnodigen.</div>
+    </a>
+
+    <!-- 10 Werk & ondernemen -->
+    <a href="./rubriek-werk.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Werk & ondernemen</div>
+      <div style="color:#333;font-size:14px;">Sollicitatie, micro-entreprise, B&B/gîtes, factuur/URSSAF, verzekeringen.</div>
+    </a>
+
+    <!-- 11 Klussen -->
+    <a href="./rubriek-klussen.html" style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
+      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Klussen</div>
+      <div style="color:#333;font-size:14px;">Doe-het-zelf, gereedschap, bouwmarktgesprek, materialen, uitleg van werk.</div>
+    </a>
+  </section>
+
+  <!-- Woordenlijsten menu -->
+  <section aria-label="Woordenlijsten" style="margin-top:16px;border:1px solid #eee;border-radius:12px;padding:12px;background:#fff;">
+    <h2 style="margin:0 0 8px;color:#800000;font-size:18px;">Woordenlijsten (open & downloadbaar)</h2>
+    <p style="margin:0 0 6px;font-size:14px;color:#333;">Openbare NL↔FR lijsten op Nederlanders.fr. Je kunt ze vanuit de browser opslaan/printen.</p>
+    <ul style="margin:6px 0 0 18px;font-size:14px;line-height:1.6;">
+      <li><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans" target="_blank" rel="noopener" style="color:#800000;">Medische termen (NL↔FR)</a></li>
+      <li><a href="https://www.nederlanders.fr/profiles/blogs/begrippenlijst-bij-garagebezoek" target="_blank" rel="noopener" style="color:#800000;">Garage / contrôle technique</a></li>
+      <li><a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" target="_blank" rel="noopener" style="color:#800000;">IT / portalen / FranceConnect</a></li>
+      <li><a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" target="_blank" rel="noopener" style="color:#800000;">Franse afkortingen</a></li>
+      <li><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" target="_blank" rel="noopener" style="color:#800000;">Klussen / doe-het-zelf</a></li>
+      <li><a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" target="_blank" rel="noopener" style="color:#800000;">Alle lexicons (overzicht)</a></li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer style="margin-top:12px;font-size:12.5px;color:#555;">
+    <div><strong>Didactiek:</strong> Doelzinnen • <strong>Taaltips</strong> • Spreekprompts • Micro-lexicon • Pre-flight (5/10/20 min).</div>
+    <div style="margin-top:4px;">CTA’s staan onderaan elke rubriek: 
+      <a href="https://www.nederlanders.fr/page/frantastique-1" style="color:#800000;">Frantastique via NLFR</a> ·
+      <a href="https://www.nederlanders.fr/page/frantastique-1#aimigo" style="color:#800000;">Aïmigo via NLFR</a> ·
+      <a href="https://apprendre.tv5monde.com/" style="color:#800000;">TV5MONDE – Apprendre</a>.
+    </div>
+    <div style="margin-top:4px;">Aanspreekvorm: <strong>vous</strong> (default). “Tu” alleen bij hechte kennissen en na duidelijke uitnodiging.</div>
+  </footer>
 </div>
