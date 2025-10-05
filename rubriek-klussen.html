@@ -1,99 +1,268 @@
 <!doctype html><meta charset="utf-8">
 <title>Klussen – NLFR Preflight</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
-  <h1 style="margin:0 0 8px;color:#800000">Klussen (DOE-HET-ZELF)</h1>
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
+  <h1 style="margin:0 0 8px;color:#800000">Klussen</h1>
+
   <!-- NAV -->
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
     <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
     <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
             style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
   </div>
-  <p>Kies je subrubriek. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight. <strong>“Vous” is standaard.</strong></p>
 
-  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
-    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
-    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
-      <option value="brico">Bouwmarktgesprek (materiaal/gereedschap)</option>
-      <option value="mesures">Materialen & maten uitleggen</option>
-    </select>
-    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
+  <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>. <strong>“Vous” is standaard.</strong></p>
+
+  <!-- SUBRUBRIEKEN ALS KNOPPEN -->
+  <div id="subs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0 12px;">
+    <button class="subbtn" data-key="magasin">Bouwmarktgesprek (vinden & uitleggen)</button>
+    <button class="subbtn" data-key="materiaux">Materialen & maten (hout, plaat, bevestiging)</button>
+    <button class="subbtn" data-key="outillage">Gereedschap & verhuur</button>
+    <button class="subbtn" data-key="peinture">Verf & voorbereiding</button>
+    <button class="subbtn" data-key="securite">Veiligheid & stroom/water afsluiten</button>
   </div>
 
+  <!-- Primair: “Toon” -->
+  <div style="margin:6px 0 12px;">
+    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
+    <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
+  </div>
+
+  <!-- OUTPUT -->
   <div id="out" style="display:none">
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul><div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;"><h2>Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
+      <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+    </section>
   </div>
 
-  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Lexicons: <a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" style="color:#800000;">Klussen</a> · <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Overzicht</a>.</footer>
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">
+    Lexicons:
+    <a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" style="color:#800000;">Klussen / doe-het-zelf</a> ·
+    <a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" style="color:#800000;">Franse afkortingen</a> ·
+    <a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" style="color:#800000;">IT/portalen (FranceConnect)</a> ·
+    <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Alle lexicons</a>.
+    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
+  </footer>
 </div>
+
+<style>
+  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
+  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
+</style>
+
 <script>
 (function(){
-  var LEX={klussen:"https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk"};
+  var LEX={
+    tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon",
+    afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
+    it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen",
+    klus:"https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk"
+  };
+
   var BANK={
-    brico:{
+    magasin:{
       targets:[
-        "Je cherche [matériau/outillage] pour [usage].",
-        "Auriez-vous une alternative/équivalent ?",
-        "Pouvez-vous me couper ça aux dimensions ?"
+        "Bonjour, je cherche le rayon [électricité/bois/peinture/quincaillerie].",
+        "J’ai un petit projet: [décrire]. De quoi ai-je besoin ?",
+        "Est-ce que vous coupez le bois / la planche à la dimension ?"
       ],
       tips:[
-        "Noem toepassing → beter advies (intérieur/extérieur, humidité).",
-        "Vraag equivalent/merk-huismerk.",
-        "Vraag zaagservice/snijdienst als beschikbaar."
+        "Begin met rayon: électricité, plomberie, peinture, quincaillerie (ijzerwaren).",
+        "Hou uitleg kort: doel + materiaal + maat.",
+        "Vraag naar zaagservice en retours (retour/échange)."
       ],
       prompts:[
-        "Beschrijf klus + materiaal.",
-        "Vraag alternatief en prijsverschil.",
-        "Vraag op maat zagen/snijden."
+        "Leg in 1 zin je project uit.",
+        "Vraag naar rayon en zaagservice.",
+        "Vraag of er alternatieven/sets zijn."
       ],
       lex:[
-        ["matériau/outillage","materiaal/gereedschap"],["intérieur/extérieur","binnen/buiten"],["résistant à l’humidité","vochtbestendig"],["découpe","op maat zagen/snijden"]
+        ["rayon","afdeling"],["quincaillerie","ijzerwaren"],["découpe","zaagservice"],["retour/échange","retour/ruil"],
+        ["stock / rupture","voorraad / uitverkocht"],["disponible aujourd’hui","vandaag leverbaar"]
       ],
-      links:[{label:"Klussen-lexicon",url:LEX.klussen}],
-      pre:["Foto/tekening van de klus.","Maten/hoeveelheden op papier.","Budget/kwaliteit kiezen."]
+      links:[{label:"Klussen-lexicon",url:LEX.klus}],
+      pre:[
+        "Foto/tekening van het project meenemen.",
+        "Maten (mm/cm) en gewenste aantallen noteren.",
+        "Meetlint & kleine schroefjes als referentie mee."
+      ]
     },
-    mesures:{
+
+    materiaux:{
       targets:[
-        "Voici les dimensions : longueur [x], largeur [y], épaisseur [z].",
-        "Il me faut des vis/chevilles adaptées.",
-        "Je voudrais un joint/une colle pour [support]."
+        "Il me faut une plaque de MDF/OSB de [épaisseur] et [dimensions].",
+        "Pour un mur en brique, quel type de cheville/vis faut-il ?",
+        "Je cherche des tasseaux / un tasseau de [section] en mètres."
       ],
       tips:[
-        "Gebruik metrisch (mm/cm/m) en noem tolerantie.",
-        "Vraag bevestigingsmateriaal dat past (supports).",
-        "Let op buitentoepassing en dilatatie."
+        "Noem **épaisseur** (dikte) en **dimensions** (L×l).",
+        "Ondergrond bepaalt plug/vis: placo (gips), brique, béton, bois.",
+        "Vraag naar **section** (balkmaat) en **traitement** (binnen/buiten)."
       ],
       prompts:[
-        "Geef 3 maten en tolerantie.",
-        "Vraag juiste plug/schroef.",
-        "Vraag geschikte lijm/kit voor ondergrond."
+        "Specificatie: materiaal + dikte + afmeting.",
+        "Ondergrond noemen + toepassingsgewicht.",
+        "Bevestigingsmiddel laten adviseren."
       ],
       lex:[
-        ["longueur/largeur/épaisseur","lengte/breedte/dikte"],["cheville/vis","plug/schroef"],["joint/colle","kit/lijm"],["support","ondergrond"],["tolérance","tolerantie"]
+        ["MDF / OSB / contreplaqué","MDF / OSB / multiplex"],
+        ["épaisseur / dimensions (L×l)","dikte / afmetingen (L×B)"],
+        ["cheville / vis / boulon","plug / schroef / bout"],
+        ["placo (BA13) / brique / béton","gipsplaat / baksteen / beton"],
+        ["tasseau / liteau","lat / tengel"]
       ],
-      links:[{label:"Klussen-lexicon",url:LEX.klussen}],
-      pre:["Maten checken (twee keer meten).","Foto van ondergrond.","Specificaties product (etiket) lezen."]
+      links:[{label:"Klussen-lexicon",url:LEX.klus}],
+      pre:[
+        "Ondergrond checken (testboor).",
+        "Gewicht van object inschatten (kg).",
+        "Binnen/buiten en vocht- of warmtebron noteren."
+      ]
+    },
+
+    outillage:{
+      targets:[
+        "Avez-vous une ponceuse/perceuse en location ?",
+        "Je voudrais des embouts [PH/PZ/Torx] et des forets [bois/métal/béton] en [diamètre].",
+        "Y a-t-il une consigne/caution pour la location ?"
+      ],
+      tips:[
+        "Vraag naar **location** (verhuur) en **caution** (borg).",
+        "Noem type bit/boor en **diamètre** in mm.",
+        "Vraag gebruiksadvies en **EPI** (PBM: lunettes, gants)."
+      ],
+      prompts:[
+        "Zeg taak (schuren/boren) + materiaal.",
+        "Vraag juiste boor/bit en toerentaladvies.",
+        "Vraag borg, huurperiode en retourstaat."
+      ],
+      lex:[
+        ["ponceuse / perceuse / scie sauteuse","schuurmachine / boormachine / decoupeerzaag"],
+        ["embout / foret (Ø)","bit / boor (diameter)"],
+        ["location / caution","verhuur / borg"],
+        ["EPI (gants, lunettes)","PBM (handschoenen, bril)"]
+      ],
+      links:[{label:"Klussen-lexicon",url:LEX.klus}],
+      pre:[
+        "Stroomvoorziening en verlengsnoer checken.",
+        "Stofafzuiging / masker regelen.",
+        "Teststukje om te oefenen."
+      ]
+    },
+
+    peinture:{
+      targets:[
+        "Je cherche une peinture [acrylique/glycéro] pour [pièce/support].",
+        "Quelle quantité pour [m²] et faut-il une sous-couche ?",
+        "Avez-vous des conseils pour la préparation (ponçage, nettoyage) ?"
+      ],
+      tips:[
+        "Binnen: vaak **acrylique**; natte ruimtes schimmelwerend.",
+        "Vraag naar **rendement** (m²/L) en **sous-couche** (primer).",
+        "Noem ondergrond: plâtre, bois, métal, carrelage."
+      ],
+      prompts:[
+        "Ondergrond + ruimte + gewenste afwerking (mat/satin/brillant).",
+        "Vraag rollers/kwasten + tape en afplakken.",
+        "Vraag droogtijden en overschildertermijn."
+      ],
+      lex:[
+        ["acrylique / glycéro","waterbasis / terpentinebasis"],
+        ["sous-couche / primaire","primer"],
+        ["rendement (m²/L)","dekking (m²/L)"],
+        ["mat / satiné / brillant","mat / zijdeglans / hoogglans"],
+        ["plâtre / carrelage","pleister / tegel"]
+      ],
+      links:[{label:"Klussen-lexicon",url:LEX.klus}],
+      pre:[
+        "Oppervlak ontvetten, schuren, stofvrij maken.",
+        "Afbakenen met tape; vloeren afdekken.",
+        "Testvlakje zetten en licht controleren."
+      ]
+    },
+
+    securite:{
+      targets:[
+        "Je vais couper l’électricité / l’eau avant d’intervenir.",
+        "Où se trouve le disjoncteur général / le compteur d’eau ?",
+        "J’utilise des gants et des lunettes de protection."
+      ],
+      tips:[
+        "Altijd **disjoncteur** uit bij elektra; water afsluiten bij leidingen.",
+        "Gebruik PBM (gants, lunettes, masque).",
+        "Ventilatie bij lijmen/verven; brandgevaar checken."
+      ],
+      prompts:[
+        "Beschrijf wat je gaat uitschakelen en waarom.",
+        "Vraag naar locatie meterkast/hoofdkraan.",
+        "Herhaal veiligheidsmaatregelen hardop."
+      ],
+      lex:[
+        ["disjoncteur / tableau électrique","hoofdschakelaar / groepenkast"],
+        ["couper l’eau / l’électricité","water / stroom afsluiten"],
+        ["gants / lunettes / masque","handschoenen / bril / masker"],
+        ["mise hors tension","spanningsloos maken"]
+      ],
+      links:[{label:"Klussen-lexicon",url:LEX.klus},{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Plan noodstop (stroom/water) en ventilatie.",
+        "Kinder-/huisdier-veilige zone maken.",
+        "Vuilniszakken en opruimkit klaarzetten."
+      ]
     }
   };
 
-  var s=document.getElementById('scenario'), out=document.getElementById('out');
-  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), l=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
-  function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
-  function render(){
-    var d=BANK[s.value]; if(!d) return;
-    [t,tips,p,l,pre].forEach(clear);
-    d.targets.forEach(x=>{var li=document.createElement('li'); li.textContent=x; t.appendChild(li);});
-    d.tips.forEach(x=>{var li=document.createElement('li'); li.textContent=x; tips.appendChild(li);});
-    d.prompts.forEach(x=>{var li=document.createElement('li'); li.textContent=x; p.appendChild(li);});
-    d.lex.forEach(x=>{var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; l.appendChild(li);});
-    link.innerHTML=(d.links||[]).map(u=>'<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>').join(' · ');
-    d.pre.forEach(x=>{var li=document.createElement('li'); li.textContent=x; pre.appendChild(li);});
-    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+  // ----- UI wiring -----
+  var selKey=null;
+  var out=document.getElementById('out');
+  var targets=document.getElementById('targets'), tips=document.getElementById('tips'),
+      prompts=document.getElementById('prompts'), lex=document.getElementById('lex'),
+      pre=document.getElementById('pre'), lexLink=document.getElementById('lexLink');
+
+  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), b=>b.classList.remove('active'));
+      this.classList.add('active'); selKey=this.getAttribute('data-key');
+      var note=document.getElementById('selNote'); if(note) note.textContent='geselecteerd: '+this.textContent;
+      render(selKey);
+    });
+  });
+
+  document.getElementById('go').addEventListener('click', function(){
+    if(!selKey){ var note=document.getElementById('selNote'); if(note) note.textContent='(kies eerst een subrubriek)'; return; }
+    render(selKey);
+  });
+
+  function render(key){
+    var d=BANK[key]; if(!d) return;
+    [targets,tips,prompts,lex,pre].forEach(clear);
+
+    d.targets.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; targets.appendChild(li); });
+    d.tips.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
+    d.prompts.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
+    d.lex.forEach(x=>{ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
+
+    var links=(d.links||[]).map(u=>'<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>').join(' · ');
+    lexLink.innerHTML = links;
+
+    d.pre.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
+
+    out.style.display='block';
+    window.scrollTo(0, document.getElementById('app').offsetTop);
   }
-  document.getElementById('go').addEventListener('click', render);
 })();
 </script>

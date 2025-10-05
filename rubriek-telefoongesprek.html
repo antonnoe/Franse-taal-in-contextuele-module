@@ -1,42 +1,75 @@
 <!doctype html><meta charset="utf-8">
 <title>Het telefoongesprek – NLFR Preflight</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
   <h1 style="margin:0 0 8px;color:#800000">Het telefoongesprek</h1>
-  <p style="margin:0 0 12px;">Kies je subrubriek. <strong>“Vous” is standaard</strong>. Per subrubriek tonen we: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight.</p>
 
-  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
-    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
-    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
-      <option value="opening">Opening & doorverbinden</option>
-      <option value="afspraak">Afspraak plannen / verzetten</option>
-      <option value="contact">Adres / telefoon / e-mail dicteren</option>
-      <option value="bereik">Slecht bereik / langzamer spreken / terugbellen</option>
-      <option value="levering">Leveringen & technici</option>
-      <option value="schade">Schade / klacht (verzekering/woning/garage)</option>
-      <option value="mairie">Mairie/administratie bellen</option>
-      <option value="voicemail">Voicemail & terugbelverzoek</option>
-    </select>
-    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
+  <!-- NAV -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
+    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
+            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
   </div>
 
+  <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>. <strong>“Vous” is standaard.</strong></p>
+
+  <!-- SUBRUBRIEKEN ALS KNOPPEN -->
+  <div id="subs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0 12px;">
+    <button class="subbtn" data-key="opening">Opening & doorverbinden</button>
+    <button class="subbtn" data-key="afspraak">Afspraak plannen / verzetten</button>
+    <button class="subbtn" data-key="contact">Adres / telefoon / e-mail dicteren</button>
+    <button class="subbtn" data-key="bereik">Slecht bereik / langzamer spreken / terugbellen</button>
+    <button class="subbtn" data-key="levering">Leveringen & technici</button>
+    <button class="subbtn" data-key="schade">Schade / klacht (verzekering/woning/garage)</button>
+    <button class="subbtn" data-key="mairie">Mairie/administratie bellen</button>
+    <button class="subbtn" data-key="voicemail">Voicemail & terugbelverzoek</button>
+    <button class="subbtn" data-key="phonewidget">Telefoonnummer (spreek & check)</button>
+  </div>
+
+  <!-- Primair: “Toon” -->
+  <div style="margin:6px 0 12px;">
+    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
+    <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
+  </div>
+
+  <!-- OUTPUT -->
   <div id="out" style="display:none">
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+    <section id="sec-targets" style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;display:none;">
       <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+    <section id="sec-tips" style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;display:none;">
       <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+    <section id="sec-prompts" style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;display:none;">
       <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+    <section id="sec-lex" style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;display:none;">
       <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
       <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+    <section id="sec-pre" style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;display:none;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
     </section>
+
+    <!-- Speciaal: Telefoonnummer widget -->
+    <section id="sec-phone" style="border:2px dashed #ddd;border-radius:10px;padding:12px;margin:10px 0;display:none;">
+      <h2 style="margin:0 0 8px;font-size:18px;">Telefoonnummer (spreek & check)</h2>
+      <p style="margin:0 0 8px;font-size:14px;color:#333;">Vul je nummer in (zonder spaties). We tonen automatisch <strong>vijf tweetallen</strong> en een kort oefenscript.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+        <input id="num" type="tel" inputmode="numeric" placeholder="06xxxxxxxx"
+               style="flex:1;min-width:220px;padding:10px;border:1px solid #ddd;border-radius:10px">
+        <button type="button" id="fmt" style="padding:10px 12px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Zet om naar 5×2</button>
+        <button type="button" id="copy" style="padding:10px 12px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Kopieer</button>
+      </div>
+      <div id="pairs" style="font-family:monospace;font-size:18px;margin-bottom:8px;color:#800000"></div>
+      <ol id="phonetips" style="margin:6px 0 0 18px;font-size:14px;color:#333;">
+        <li>Lees 3× hardop in hetzelfde ritme: <em>xx – xx – xx – xx – xx</em>.</li>
+        <li>Neem jezelf één keer op met je telefoonmemo. Luister: <em>duidelijk</em>? <em>constante pauzes</em>?</li>
+        <li>Zeg er meteen bij: “Je vous donne mon numéro par deux chiffres”.</li>
+      </ol>
+    </section>
+
+    <!-- CTA’s -->
     <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
       <h2 style="margin:0 0 6px;font-size:18px;">Verder</h2>
       <a href="https://www.nederlanders.fr/page/frantastique-1" style="text-decoration:none;background:#800000;color:#fff;padding:8px 10px;border-radius:8px;display:inline-block;margin:0 8px 8px 0;">Frantastique – via NLFR</a>
@@ -45,8 +78,17 @@
     </section>
   </div>
 
-  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Aanspreekvorm: <strong>vous</strong>. Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">naar Nederlanders.fr</a>.</footer>
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">
+    Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Nederlanders.fr</a>. “Vous” is default.
+    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
+  </footer>
 </div>
+
+<style>
+  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
+  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
+</style>
+
 <script>
 (function(){
   var LEX = {
@@ -54,6 +96,8 @@
     it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen",
     tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon"
   };
+
+  // Contentbank
   var BANK = {
     opening:{
       targets:[
@@ -63,7 +107,7 @@
       ],
       tips:[
         "Begin altijd met ‘Bonjour’ + vous-vorm.",
-        "Vraag expliciet naar de afdeling: “le service concerné”.",
+        "Vraag expliciet naar ‘le service concerné’.",
         "Herhaal kerninfo: “Si j’ai bien compris…”"
       ],
       prompts:[
@@ -124,7 +168,7 @@
       links:[{label:"IT/portalen",url:LEX.it},{label:"Afkortingen",url:LEX.afk}],
       pre:["Nummer uitgeschreven in tweetallen.","Adresregels klaar.","E-mailsjabloon klaar."]
     },
-    reach:{
+    bereik:{
       targets:[
         "Je vous entends mal. Pourriez-vous parler plus lentement ?",
         "La ligne coupe, je vous rappelle tout de suite.",
@@ -144,7 +188,7 @@
         ["la ligne coupe","de lijn valt weg"],["parler lentement","langzaam spreken"],["rappeler/être rappelé","(terug)bellen"]
       ],
       links:[{label:"Afkortingen",url:LEX.afk}],
-      pre:["Zorg voor stil plekje.","Telefoon bijna vol? opladen.","Nummer in tweetallen paraat."]
+      pre:["Stille plek zoeken.","Telefoon bijna leeg? Opladen.","Nummer in tweetallen paraat."]
     },
     levering:{
       targets:[
@@ -171,7 +215,7 @@
     schade:{
       targets:[
         "Je voudrais déclarer un sinistre / un problème.",
-        "Pourriez-vous m’envoyer un devis ?",
+        "Pourriez-vous me envoyer un devis ?",
         "Quelles sont les démarches et les délais ?"
       ],
       tips:[
@@ -236,19 +280,82 @@
     }
   };
 
-  var sEl=document.getElementById('scenario'), out=document.getElementById('out');
-  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), lex=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
+  var selKey=null;
+  var out = document.getElementById('out');
+  var secTargets=document.getElementById('sec-targets'), secTips=document.getElementById('sec-tips'), secPrompts=document.getElementById('sec-prompts'),
+      secLex=document.getElementById('sec-lex'), secPre=document.getElementById('sec-pre'), secPhone=document.getElementById('sec-phone');
+  var targets=document.getElementById('targets'), tips=document.getElementById('tips'), prompts=document.getElementById('prompts'),
+      lex=document.getElementById('lex'), pre=document.getElementById('pre'), lexLink=document.getElementById('lexLink');
+
   function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-  function render(){
-    var key=sEl.value, d=BANK[key]; if(!d) return;
-    clear(t); d.targets.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; t.appendChild(li); });
-    clear(tips); d.tips.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
-    clear(p); d.prompts.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; p.appendChild(li); });
-    clear(lex); d.lex.forEach(function(x){ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
-    link.innerHTML = (d.links||[]).map(function(l){ return '<a href="'+l.url+'" style="color:#800000">'+l.label+'</a>'; }).join(' · ');
-    clear(pre); d.pre.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
-    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+
+  // Subrubriek-knoppen
+  Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), b=>b.classList.remove('active'));
+      this.classList.add('active'); selKey=this.getAttribute('data-key');
+      var note=document.getElementById('selNote'); if(note) note.textContent='geselecteerd: '+this.textContent;
+      render(selKey);
+    });
+  });
+
+  document.getElementById('go').addEventListener('click', function(){
+    if(!selKey){ var note=document.getElementById('selNote'); if(note) note.textContent='(kies eerst een subrubriek)'; return; }
+    render(selKey);
+  });
+
+  function render(key){
+    // reset zichtbaarheid
+    [secTargets,secTips,secPrompts,secLex,secPre,secPhone].forEach(function(sec){ sec.style.display='none'; });
+    out.style.display='block';
+
+    if(key==='phonewidget'){
+      secPhone.style.display='block';
+      window.scrollTo(0, document.getElementById('app').offsetTop);
+      return;
+    }
+    var d=BANK[key]; if(!d) return;
+
+    // Vul secties
+    [targets,tips,prompts,lex,pre].forEach(clear);
+    d.targets.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; targets.appendChild(li); });
+    d.tips.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
+    d.prompts.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
+    d.lex.forEach(x=>{ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
+
+    var links=(d.links||[]).map(lk=>'<a href="'+lk.url+'" style="color:#800000">'+lk.label+'</a>').join(' · ');
+    lexLink.innerHTML = links;
+
+    d.pre.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
+
+    // Toon secties (behalve phonewidget)
+    secTargets.style.display=secTips.style.display=secPrompts.style.display=secLex.style.display=secPre.style.display='block';
+    window.scrollTo(0, document.getElementById('app').offsetTop);
   }
-  document.getElementById('go').addEventListener('click', render);
+
+  // Mini-tool: telefoonnummer → vijf tweetallen + kopieer
+  function toPairs(v){
+    v = (v||'').replace(/\D+/g,''); // alleen cijfers
+    // Forceer 10 cijfers (FR mobiel): laat extra’s staan voor vaste lijn (we groeperen per 2)
+    var out=[]; for(var i=0;i<v.length;i+=2){ out.push(v.slice(i,i+2)); }
+    return out.join(' – ');
+  }
+  document.getElementById('fmt').addEventListener('click', function(){
+    var v = document.getElementById('num').value;
+    document.getElementById('pairs').textContent = toPairs(v);
+  });
+  document.getElementById('copy').addEventListener('click', function(){
+    var txt = document.getElementById('pairs').textContent.trim();
+    if(!txt){ txt = toPairs(document.getElementById('num').value||''); document.getElementById('pairs').textContent = txt; }
+    if(!txt){ return; }
+    navigator.clipboard && navigator.clipboard.writeText(txt).then(function(){
+      alert('Gekopieerd: '+txt);
+    }, function(){
+      // fallback
+      var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); alert('Gekopieerd: '+txt); }catch(e){}
+      document.body.removeChild(ta);
+    });
+  });
 })();
 </script>

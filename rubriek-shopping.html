@@ -1,37 +1,73 @@
 <!doctype html><meta charset="utf-8">
 <title>Shopping – NLFR Preflight</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
   <h1 style="margin:0 0 8px;color:#800000">Shopping (boodschappen & speciaalzaken)</h1>
-  <p style="margin:0 0 12px;">Kies je subrubriek. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight. <strong>“Vous” is standaard.</strong></p>
 
-  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
-    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
-    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
-      <option value="boulangerie">Bakker (boulangerie)</option>
-      <option value="boucherie">Slager (boucherie)</option>
-      <option value="primeur">Groenteboer (primeur)</option>
-      <option value="poissonnier">Visboer (poissonnier)</option>
-      <option value="volailler">Poelier (volailler)</option>
-      <option value="supermarche">Supermarkt (rayons & retour)</option>
-      <option value="payer">Betalen (cash / chèque / carte bancaire)</option>
-    </select>
-    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
+  <!-- NAV -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
+    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
+            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
   </div>
 
+  <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>. <strong>“Vous” is standaard.</strong></p>
+
+  <!-- SUBRUBRIEKEN ALS KNOPPEN -->
+  <div id="subs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0 12px;">
+    <button class="subbtn" data-key="boulangerie">Bakker (boulangerie)</button>
+    <button class="subbtn" data-key="boucherie">Slager (boucherie)</button>
+    <button class="subbtn" data-key="primeur">Groenteboer (primeur)</button>
+    <button class="subbtn" data-key="poissonnier">Visboer (poissonnier)</button>
+    <button class="subbtn" data-key="volailler">Poelier (volailler)</button>
+    <button class="subbtn" data-key="supermarche">Supermarkt (rayons & retour)</button>
+    <button class="subbtn" data-key="payer">Betalen (cash / chèque / carte)</button>
+  </div>
+
+  <!-- Primair: “Toon” (blijft voor muscle-memory) -->
+  <div style="margin:6px 0 12px;">
+    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
+    <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
+  </div>
+
+  <!-- OUTPUT -->
   <div id="out" style="display:none">
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul><div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div></section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;"><h2 style="margin:0 0 6px;font-size:18px;">Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
+      <div id="extraLinks" style="margin-top:8px;font-size:13px;color:#555;"></div>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
+      <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+    </section>
   </div>
 
-  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">naar Nederlanders.fr</a>. “Vous” is default.</footer>
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">
+    Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Nederlanders.fr</a>. “Vous” is default.
+    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
+  </footer>
 </div>
+
+<style>
+  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
+  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
+</style>
+
 <script>
 (function(){
+  // Openlijke NLFR-lexiconlinks
   var LEX={tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon"};
+
+  // Contentbank SHOPPING (zelfde inhoudslogica; “Voorbereiden” i.p.v. Pre-flight)
   var BANK={
     boulangerie:{
       targets:[
@@ -75,6 +111,10 @@
       lex:[
         ["paleron (stoof)","sukade"],["tranches fines","dunne plakken"],["haché","gehakt"],["maigre","mager"],["cuisson","garing"]
       ],
+      // EXTRA: jouw Infofrankrijk-artikel bij de slager
+      extra:[
+        {label:"Meer over de slager (Infofrankrijk)", url:"https://infofrankrijk.com/a-la-boucherie-spreek-de-taal-van-de-franse-slager/"}
+      ],
       links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
       pre:["Gerecht bepalen (stoof/grill).","Hoeveelheid + aantal personen.","Mag snijden of in porties?"]
     },
@@ -116,9 +156,7 @@
         "Vraag filet/ontgraten.",
         "Vraag cuisson/bewaren."
       ],
-      lex:[
-        ["filet","filet"],["arêtes","graten"],["peau","huid"],["frais du jour","dagvers"]
-      ],
+      lex:[["filet","filet"],["arêtes","graten"],["peau","huid"],["frais du jour","dagvers"]],
       links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
       pre:["Soort/gewicht kiezen.","Met/zonder huid/graten.","Binnen 24–48 u gebruiken."]
     },
@@ -138,9 +176,7 @@
         "Vraag découpe.",
         "Vraag cuissonadvies."
       ],
-      lex:[
-        ["poulet fermier","boerderijkip"],["Label Rouge","kwaliteitslabel"],["découper","in stukken snijden"]
-      ],
+      lex:[["poulet fermier","boerderijkip"],["Label Rouge","kwaliteitslabel"],["découper","in stukken snijden"]],
       links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
       pre:["Weet bereiding (rôtir/stoof).","Gewicht inschatten.","Eventueel in stukken laten snijden."]
     },
@@ -190,20 +226,60 @@
     }
   };
 
-  var s=document.getElementById('scenario'), out=document.getElementById('out');
-  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), l=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
+  // DOM refs
+  var out=document.getElementById('out');
+  var targets=document.getElementById('targets');
+  var tips=document.getElementById('tips');
+  var prompts=document.getElementById('prompts');
+  var lex=document.getElementById('lex');
+  var lexLink=document.getElementById('lexLink');
+  var pre=document.getElementById('pre');
+  var extraLinks=document.getElementById('extraLinks');
+  var selKey=null;
+
   function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-  function render(){
-    var d=BANK[s.value]; if(!d) return;
-    [t,tips,p,l,pre].forEach(clear);
-    d.targets.forEach(x=>{var li=document.createElement('li'); li.textContent=x; t.appendChild(li);});
-    d.tips.forEach(x=>{var li=document.createElement('li'); li.textContent=x; tips.appendChild(li);});
-    d.prompts.forEach(x=>{var li=document.createElement('li'); li.textContent=x; p.appendChild(li);});
-    d.lex.forEach(x=>{var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; l.appendChild(li);});
-    link.innerHTML=(d.links||[]).map(lk=>'<a href="'+lk.url+'" style="color:#800000">'+lk.label+'</a>').join(' · ');
-    d.pre.forEach(x=>{var li=document.createElement('li'); li.textContent=x; pre.appendChild(li);});
-    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+
+  // Subrubriek-knoppen gedrag
+  Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), b=>b.classList.remove('active'));
+      this.classList.add('active'); selKey=this.getAttribute('data-key');
+      document.getElementById('selNote').textContent='geselecteerd: '+this.textContent;
+      render(selKey);
+    });
+  });
+
+  // “Toon geselecteerde subrubriek” als fallback
+  document.getElementById('go').addEventListener('click', function(){
+    if(!selKey){ document.getElementById('selNote').textContent='(kies eerst een subrubriek)'; return; }
+    render(selKey);
+  });
+
+  function render(key){
+    var d=BANK[key]; if(!d) return;
+    [targets,tips,prompts,lex,pre].forEach(clear);
+    // Doelzinnen
+    d.targets.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; targets.appendChild(li); });
+    // Taaltips
+    d.tips.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
+    // Extra bron bij slager
+    if(d.extra){
+      extraLinks.innerHTML = d.extra.map(e=>'<a href="'+e.url+'" style="color:#800000">'+e.label+'</a>').join(' · ');
+    } else {
+      extraLinks.innerHTML = '';
+    }
+    // Spreekprompts
+    d.prompts.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
+    // Micro-lexicon
+    d.lex.forEach(x=>{ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
+    // Lexicon-overzicht
+    var links=(d.links||[]).map(lk=>'<a href="'+lk.url+'" style="color:#800000">'+lk.label+'</a>').join(' · ');
+    lexLink.innerHTML = links;
+    // Voorbereiden
+    d.pre.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
+
+    out.style.display='block';
+    window.scrollTo(0, document.getElementById('app').offsetTop);
   }
-  document.getElementById('go').addEventListener('click', render);
 })();
 </script>
