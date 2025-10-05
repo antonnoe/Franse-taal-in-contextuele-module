@@ -1,0 +1,102 @@
+<!doctype html><meta charset="utf-8">
+<title>Mairie & administratie – NLFR Preflight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+  <h1 style="margin:0 0 8px;color:#800000">Mairie & administratie</h1>
+  <!-- NAV -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
+    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
+            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
+  </div>
+  <p>Kies je subrubriek. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight. <strong>“Vous” is standaard.</strong></p>
+
+  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
+    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
+    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
+      <option value="document">Document/attestation aanvragen</option>
+      <option value="rdv">RDV & justificatifs</option>
+    </select>
+    <div style="margin-top:10px">
+      <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button>
+    </div>
+  </div>
+
+  <div id="out" style="display:none">
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul><div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;"><h2 style="margin:0 0 6px;font-size:18px;">Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul></section>
+  </div>
+
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Nederlanders.fr</a>. “Vous” default.</footer>
+</div>
+<script>
+(function(){
+  var LEX={afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen", it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen"};
+  var BANK={
+    document:{
+      targets:[
+        "Je viens pour demander un document/une attestation.",
+        "Quels justificatifs faut-il fournir ?",
+        "Est-ce que je peux l’obtenir aujourd’hui ?"
+      ],
+      tips:[
+        "Noem document + doel (inschrijving, school, sport, etc.).",
+        "Vraag lijst justificatifs en eventuele kosten.",
+        "Vraag stempel (‘tampon’) of digitaal document."
+      ],
+      prompts:[
+        "Zeg welk document je nodig hebt en waarom.",
+        "Vraag naar justificatifs en verwerkingstijd.",
+        "Vraag of e-mail/online mogelijk is."
+      ],
+      lex:[
+        ["attestation","verklaring"],["justificatif de domicile","adresbewijs"],["pièce d’identité","ID"],["tampon","stempel"],["extrait/acte","uittreksel/akte"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk},{label:"IT/portalen",url:LEX.it}],
+      pre:["Openingstijden & loketnummer.","ID + adresbewijs + evt. formulieren.","Contant/kaart voor kosten."]
+    },
+    rdv:{
+      targets:[
+        "Je voudrais prendre un rendez-vous.",
+        "Est-ce qu’un rendez-vous est obligatoire ?",
+        "Pouvez-vous me donner la liste des justificatifs ?"
+      ],
+      tips:[
+        "Niet elke dienst is ‘sans RDV’ — vraag expliciet.",
+        "Vraag bevestiging per e-mail (samenvatting).",
+        "Neem kopieën mee van originelen."
+      ],
+      prompts:[
+        "Vraag RDV (datum/tijd/alternatief).",
+        "Vraag bevestiging + wat meenemen.",
+        "Herhaal samenvatting van afspraken."
+      ],
+      lex:[
+        ["rendez-vous (RDV)","afspraak"],["sans/avec RDV","zonder/met afspraak"],["guichet","loket"],["formulaire","formulier"],["accusé de réception","ontvangstbevestiging"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk},{label:"IT/portalen",url:LEX.it}],
+      pre:["Twee tijdsopties paraat.","ID/justificatifs geprint en digitaal.","Contactgegevens juist op dossier."]
+    }
+  };
+
+  var s=document.getElementById('scenario'), out=document.getElementById('out');
+  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), l=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
+  function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+  function render(){
+    var d=BANK[s.value]; if(!d) return;
+    [t,tips,p,l,pre].forEach(clear);
+    d.targets.forEach(x=>{var li=document.createElement('li'); li.textContent=x; t.appendChild(li);});
+    d.tips.forEach(x=>{var li=document.createElement('li'); li.textContent=x; tips.appendChild(li);});
+    d.prompts.forEach(x=>{var li=document.createElement('li'); li.textContent=x; p.appendChild(li);});
+    d.lex.forEach(x=>{var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; l.appendChild(li);});
+    link.innerHTML=(d.links||[]).map(u=>'<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>').join(' · ');
+    d.pre.forEach(x=>{var li=document.createElement('li'); li.textContent=x; pre.appendChild(li);});
+    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+  }
+  document.getElementById('go').addEventListener('click', render);
+})();
+</script>
+

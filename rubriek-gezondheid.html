@@ -1,0 +1,99 @@
+<!doctype html><meta charset="utf-8">
+<title>Gezondheidszorg – NLFR Preflight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+  <h1 style="margin:0 0 8px;color:#800000">Gezondheidszorg</h1>
+  <!-- NAV -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
+    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
+            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
+  </div>
+  <p>Kies je subrubriek. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight. <strong>“Vous” is standaard.</strong></p>
+
+  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
+    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
+    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
+      <option value="medecin">Huisartsbezoek</option>
+      <option value="pharmacie">Apotheek / ordonnance</option>
+    </select>
+    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
+  </div>
+
+  <div id="out" style="display:none">
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul><div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;"><h2>Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul></section>
+  </div>
+
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Lexicons: <a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans" style="color:#800000;">Medisch</a> · <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Overzicht</a>.</footer>
+</div>
+<script>
+(function(){
+  var LEX={med:"https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans"};
+  var BANK={
+    medecin:{
+      targets:[
+        "Bonjour docteur, j’ai [symptôme] depuis [durée].",
+        "Je prends ces médicaments : [liste].",
+        "Pourriez-vous me donner une ordonnance et un arrêt de travail si nécessaire ?"
+      ],
+      tips:[
+        "Zeg duur en intensiteit (depuis/depuis quand).",
+        "Neem medicatielijst/kaart mee.",
+        "Vraag samenvatting van behandelplan."
+      ],
+      prompts:[
+        "Beschrijf klacht + duur.",
+        "Noem medicatie/allergieën.",
+        "Vraag ordonnance/advies/controle."
+      ],
+      lex:[
+        ["symptôme","symptoom"],["douleur légère/forte","lichte/hevige pijn"],["depuis","sinds"],["ordonnance","recept"],["arrêt de travail","werkverlofbriefje"]
+      ],
+      links:[{label:"Medische termen",url:LEX.med}],
+      pre:["Carte Vitale/mutuelle (indien aanwezig).","ID + adres + telefoon.","Lijst klachten/medicatie."]
+    },
+    pharmacie:{
+      targets:[
+        "Bonjour, j’ai une ordonnance pour [nom].",
+        "Je cherche l’équivalent de [produit].",
+        "Pouvez-vous m’expliquer la posologie ?"
+      ],
+      tips:[
+        "Vraag generiek ‘générique’ indien gewenst.",
+        "Herhaal posologie (dosering) hardop.",
+        "Vraag bijwerkingen en interacties."
+      ],
+      prompts:[
+        "Overhandig ordonnance + vraag uitleg.",
+        "Vraag generiek/alternatief.",
+        "Herhaal dosering + schema."
+      ],
+      lex:[
+        ["générique","generiek"],["posologie","dosering"],["effets secondaires","bijwerkingen"],["notice","bijsluiter"],["sans ordonnance","zonder recept"]
+      ],
+      links:[{label:"Medische termen",url:LEX.med}],
+      pre:["Recept/foto recept.","Allergieën/medicatie bekend.","Neem tasje/koeltasje mee indien nodig."]
+    }
+  };
+
+  var s=document.getElementById('scenario'), out=document.getElementById('out');
+  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), l=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
+  function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+  function render(){
+    var d=BANK[s.value]; if(!d) return;
+    [t,tips,p,l,pre].forEach(clear);
+    d.targets.forEach(x=>{var li=document.createElement('li'); li.textContent=x; t.appendChild(li);});
+    d.tips.forEach(x=>{var li=document.createElement('li'); li.textContent=x; tips.appendChild(li);});
+    d.prompts.forEach(x=>{var li=document.createElement('li'); li.textContent=x; p.appendChild(li);});
+    d.lex.forEach(x=>{var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; l.appendChild(li);});
+    link.innerHTML=(d.links||[]).map(u=>'<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>').join(' · ');
+    d.pre.forEach(x=>{var li=document.createElement('li'); li.textContent=x; pre.appendChild(li);});
+    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+  }
+  document.getElementById('go').addEventListener('click', render);
+})();
+</script>

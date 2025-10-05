@@ -1,0 +1,97 @@
+<!doctype html><meta charset="utf-8">
+<title>Werk & ondernemen – NLFR Preflight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+  <h1 style="margin:0 0 8px;color:#800000">Werk & ondernemen</h1>
+  <!-- NAV -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
+    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
+            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
+  </div>
+  <p>Kies je subrubriek. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight. <strong>“Vous” is standaard.</strong></p>
+
+  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
+    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
+    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
+      <option value="entretien">Sollicitatiegesprek</option>
+      <option value="micro">Micro-entreprise (opstart)</option>
+    </select>
+    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
+  </div>
+
+  <div id="out" style="display:none">
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2>Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul><div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;"><h2>Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul></section>
+  </div>
+
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Nederlanders.fr</a>.</footer>
+</div>
+<script>
+(function(){
+  var BANK={
+    entretien:{
+      targets:[
+        "Je vous remercie pour l’invitation. Je me présente : [nom], [expérience].",
+        "Je suis disponible à partir de [date] et je peux commencer rapidement.",
+        "Auriez-vous des précisions sur le poste et les prochaines étapes ?"
+      ],
+      tips:[
+        "Kort voorstellen, relevant voor de functie.",
+        "Geef beschikbaarheid en mobiliteit.",
+        "Vraag volgende stappen en timing."
+      ],
+      prompts:[
+        "Pitch: wie ben je + 1 sterke ervaring.",
+        "Waarom deze functie/organisatie?",
+        "Beschikbaarheid + vragen stellen."
+      ],
+      lex:[
+        ["entretien","sollicitatiegesprek"],["poste","functie"],["disponibilité","beschikbaarheid"],["contrat (CDI/CDD)","vast/tijdelijk"],["préavis","opzegtermijn"]
+      ],
+      links:[],
+      pre:["CV (FR) + referenties.","Diploma’s/attestaties.","Agenda vrijmaken."]
+    },
+    micro:{
+      targets:[
+        "Je souhaite créer une micro-entreprise dans le secteur [X].",
+        "Quelles sont les démarches (URSSAF) et les seuils de chiffre d’affaires ?",
+        "Quels assurances sont recommandées (RC pro) ?"
+      ],
+      tips:[
+        "Kies APE-code/activiteit juist (impact verzekeringen/fiscaliteit).",
+        "Hou omzetdrempels in de gaten.",
+        "RC pro vaak wenselijk."
+      ],
+      prompts:[
+        "Beschrijf activiteit/diensten.",
+        "Vraag registratie/URSSAF-stappen.",
+        "Vraag verzekeringen/boekhouding."
+      ],
+      lex:[
+        ["micro-entreprise","eenmanszaak (FR-regime)"],["URSSAF","sociale lastenorgaan"],["APE/NAF","activiteitencode"],["RC pro","bedrijfsaansprakelijkheid"]
+      ],
+      links:[],
+      pre:["ID/adres/IBAN.","Activiteitenomschrijving.","Afweging RC pro/overige verzekeringen."]
+    }
+  };
+
+  var s=document.getElementById('scenario'), out=document.getElementById('out');
+  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), l=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
+  function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+  function render(){
+    var d=BANK[s.value]; if(!d) return;
+    [t,tips,p,l,pre].forEach(clear);
+    d.targets.forEach(x=>{var li=document.createElement('li'); li.textContent=x; t.appendChild(li);});
+    d.tips.forEach(x=>{var li=document.createElement('li'); li.textContent=x; tips.appendChild(li);});
+    d.prompts.forEach(x=>{var li=document.createElement('li'); li.textContent=x; p.appendChild(li);});
+    d.lex.forEach(x=>{var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; l.appendChild(li);});
+    link.innerHTML=''; d.pre.forEach(x=>{var li=document.createElement('li'); li.textContent=x; pre.appendChild(li);});
+    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+  }
+  document.getElementById('go').addEventListener('click', render);
+})();
+</script>
