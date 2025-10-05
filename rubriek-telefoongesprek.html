@@ -1,334 +1,254 @@
-<!doctype html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NLFR – Het telefoongesprek (vous)</title>
-<style>
-  /* ultra-licht, mobiel-eerst, geen frameworks */
-  :root{--brand:#800000;--ink:#111;--muted:#555;--bg:#fff;--card:#fafafa;--line:#eee}
-  body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#fff;line-height:1.55;margin:0}
-  .wrap{max-width:920px;margin:0 auto;padding:18px}
-  .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;margin:12px 0}
-  .soft{background:var(--card)}
-  h1{margin:0 0 8px;font-size:24px;line-height:1.2;color:var(--brand)}
-  h2{margin:0 0 6px;font-size:18px}
-  label{font-weight:bold}
-  select,button,input{font:inherit}
-  select,input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px}
-  .row{display:block;margin:8px 0}
-  button.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer}
-  button.ghost{background:#fff;border-color:#111;color:#111}
-  .muted{color:var(--muted);font-size:13.5px}
-  ul,ol{margin:6px 0 0 18px}
-  .chips span{display:inline-block;border:1px solid #ddd;border-radius:16px;padding:4px 8px;margin:0 6px 6px 0;font-size:13.5px}
-  .ok{color:#0a7a0a}.warn{color:#b00020}
-  a{color:var(--brand)}
-  .note{border:1px solid #f0e6e6;background:#fff7f7;border-radius:10px;padding:8px}
-</style>
+<!doctype html><meta charset="utf-8">
+<title>Het telefoongesprek – NLFR Preflight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+  <h1 style="margin:0 0 8px;color:#800000">Het telefoongesprek</h1>
+  <p style="margin:0 0 12px;">Kies je subrubriek. <strong>“Vous” is standaard</strong>. Per subrubriek tonen we: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight.</p>
 
-<div class="wrap">
-  <h1>Het telefoongesprek — contextuele taalhulp (vous)</h1>
-  <p class="muted">Doelzinnen, mini-snacks, spreekprompts, micro-lexicon en pre-flight — precies wat je nú nodig hebt voor een telefoongesprek in Frankrijk.</p>
-
-  <!-- Keuzes -->
-  <div class="card soft">
-    <div class="row">
-      <label for="scn">Scenario</label>
-      <select id="scn">
-        <option value="opening">Opening & doorverbinden</option>
-        <option value="rdv">Afspraak plannen / verzetten</option>
-        <option value="coord">Adres / telefoon / e-mail dicteren</option>
-      </select>
-    </div>
-    <div class="row">
-      <label for="mode">Leermodus</label>
-      <select id="mode">
-        <option value="5">Express – 5 min</option>
-        <option value="10" selected>Standaard – 10 min</option>
-        <option value="20">Verdieping – 20 min</option>
-      </select>
-    </div>
-    <div class="row note">
-      <strong>Aanspreekvorm:</strong> <span>vous</span> (default). “Tu” alleen bij hechte kennissen én na expliciete uitnodiging.
-    </div>
-    <div class="row">
-      <button id="go" class="btn">Toon module</button>
-    </div>
+  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
+    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
+    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
+      <option value="opening">Opening & doorverbinden</option>
+      <option value="afspraak">Afspraak plannen / verzetten</option>
+      <option value="contact">Adres / telefoon / e-mail dicteren</option>
+      <option value="bereik">Slecht bereik / langzamer spreken / terugbellen</option>
+      <option value="levering">Leveringen & technici</option>
+      <option value="schade">Schade / klacht (verzekering/woning/garage)</option>
+      <option value="mairie">Mairie/administratie bellen</option>
+      <option value="voicemail">Voicemail & terugbelverzoek</option>
+    </select>
+    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
   </div>
 
-  <!-- Output -->
   <div id="out" style="display:none">
-    <div class="card">
-      <h2>Doelzinnen (vandaag gebruiken)</h2>
-      <ul id="targets"></ul>
-    </div>
-
-    <div class="card">
-      <h2>Mini-snacks (korte checks)</h2>
-      <div id="snacks"></div>
-      <button id="chk" class="btn ghost">Controleer</button>
-      <span id="fb" class="muted"></span>
-    </div>
-
-    <div class="card">
-      <h2>Spreekprompts (zeg dit hardop)</h2>
-      <ol id="prompts"></ol>
-      <div id="pron" class="muted"></div>
-    </div>
-
-    <div class="card">
-      <h2>Micro-lexicon</h2>
-      <div id="lex" class="chips"></div>
-      <div id="lexlink" class="muted"></div>
-    </div>
-
-    <div class="card soft">
-      <h2>Pre-flight (voor je belt)</h2>
-      <ul id="pre"></ul>
-    </div>
-
-    <div class="card">
-      <h2>Verder trainen</h2>
-      <a class="btn" href="https://www.nederlanders.fr/page/frantastique-1">Frantastique – via NLFR</a>
-      <a class="btn ghost" href="https://www.nederlanders.fr/page/frantastique-1#aimigo">Aïmigo – spreek/snack (via NLFR)</a>
-      <a class="btn ghost" href="https://apprendre.tv5monde.com/">TV5MONDE – Apprendre</a>
-    </div>
-
-    <p class="muted">Lexicons staan openlijk op Nederlanders.fr (naslag/SEO). “Vous” is standaard; we trainen op korte, beleefde taaktalen.</p>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
+      <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Verder</h2>
+      <a href="https://www.nederlanders.fr/page/frantastique-1" style="text-decoration:none;background:#800000;color:#fff;padding:8px 10px;border-radius:8px;display:inline-block;margin:0 8px 8px 0;">Frantastique – via NLFR</a>
+      <a href="https://www.nederlanders.fr/page/frantastique-1#aimigo" style="text-decoration:none;border:1px solid #ddd;color:#111;padding:8px 10px;border-radius:8px;display:inline-block;margin:0 8px 8px 0;">Aïmigo – via NLFR</a>
+      <a href="https://apprendre.tv5monde.com/" style="text-decoration:none;border:1px solid #800000;color:#800000;padding:8px 10px;border-radius:8px;display:inline-block;">TV5MONDE – Apprendre</a>
+    </section>
   </div>
-</div>
 
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Aanspreekvorm: <strong>vous</strong>. Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">naar Nederlanders.fr</a>.</footer>
+</div>
 <script>
 (function(){
-  // Openlijke lexiconlinks
   var LEX = {
-    afk: "https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
-    it:  "https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen",
-    med: "https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans",
-    gar: "https://www.nederlanders.fr/profiles/blogs/begrippenlijst-bij-garagebezoek",
-    klus:"https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk",
-    tag: "https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon"
+    afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
+    it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen",
+    tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon"
   };
-
-  // Dataset per scenario (doelzinnen, snacks, prompts, lexicon, preflight)
-  var DB = {
-    opening: {
-      title: "Opening & doorverbinden",
-      targets: [
+  var BANK = {
+    opening:{
+      targets:[
         "Bonjour Madame/Monsieur, [votre nom] à l’appareil.",
-        "Je vous appelle au sujet de …",
-        "Pourrais-je parler à [Nom/Fonction], s’il vous plaît ?",
-        "Pourriez-vous me passer le service concerné, s’il vous plaît ?",
-        "Merci, je reste en ligne."
+        "Je vous appelle au sujet de [X].",
+        "Pourrais-je parler à [Nom/Fonction], s’il vous plaît ?"
       ],
-      snacks: [
-        { t:"read", text:"« Je vous mets en relation avec le service concerné. »", q:"Wat gebeurt er zo meteen?", a:["Je wordt doorverbonden","Het gesprek wordt beëindigd","Je krijgt een sms"], ok:0 },
-        { t:"etiquette", text:"Kies de beste vous-formule om te openen:", q:"Beste openingszin?", a:["C’est qui là ?","Je vous appelle au sujet de…","Passez-moi le chef."], ok:1 }
+      tips:[
+        "Begin altijd met ‘Bonjour’ + vous-vorm.",
+        "Vraag expliciet naar de afdeling: “le service concerné”.",
+        "Herhaal kerninfo: “Si j’ai bien compris…”"
       ],
-      prompts: [
-        "Stel jezelf voor en noem het onderwerp (1 zin).",
-        "Vraag beleefd naar de juiste persoon/afdeling.",
-        "Bevestig dat je beschikbaar bent en blijft wachten.",
-        "Vraag naar terugbeloptie als de persoon afwezig is.",
-        "Sluit af met dank en ‘bonne journée’."
+      prompts:[
+        "Stel jezelf voor + onderwerp (1 zin).",
+        "Vraag naar de juiste persoon/afdeling.",
+        "Bevestig dat je beschikbaar bent nu of later."
       ],
-      lex: [
-        ["à l’appareil","aan de lijn"],
-        ["le standard","centrale/receptie"],
-        ["service concerné","betreffende afdeling"],
-        ["patienter","even wachten"],
-        ["être rappelé","teruggebeld worden"],
-        ["joindre (qqn)","(iemand) bereiken"],
-        ["ligne / coupure","lijn / onderbreking"],
-        ["disponible","beschikbaar"],
-        ["transférer l’appel","doorverbinden"],
-        ["horaires","openingstijden"]
+      lex:[
+        ["à l’appareil","aan de lijn"],["le standard","receptie"],["le service concerné","betreffende afdeling"],
+        ["patienter","even wachten"],["transférer l’appel","doorschakelen"],["être rappelé","teruggebeld worden"],
+        ["joindre","bereiken"],["coordonnées","contactgegevens"]
       ],
-      lexLink: LEX.afk,
-      pre: [
-        "Naam van de gezochte persoon/afdeling.",
-        "Klant- of dossiernummer bij de hand.",
-        "Eigen nummer in tweetallen (06 …)."
-      ],
-      pron: "Uitspraakfocus: u/ou (vous/vu) en liaison in « vous‿avez »."
+      links:[{label:"Afkortingen",url:LEX.afk},{label:"IT/portalen",url:LEX.it}],
+      pre:["Naam + afdeling klaar.","Klant-/dossiernummer bij de hand.","Eigen nummer in tweetallen."]
     },
-
-    rdv: {
-      title: "Afspraak plannen / verzetten",
-      targets: [
+    afspraak:{
+      targets:[
         "Serait-il possible d’avoir un rendez-vous [date/heure] ?",
         "Je préférerais le matin, si possible.",
-        "Pourriez-vous me confirmer par e-mail, s’il vous plaît ?",
-        "Je voudrais reporter le rendez-vous à [date/heure], si possible.",
-        "Merci, c’est noté."
+        "Pourriez-vous confirmer par e-mail/SMS, s’il vous plaît ?"
       ],
-      snacks: [
-        { t:"read", text:"« Nous avons un créneau demain à 9h15. »", q:"Wanneer is er plek?", a:["Vandaag","Morgen 9:15","Volgende week"], ok:1 },
-        { t:"numbers", text:"« Le technicien passera entre 14h et 16h. »", q:"Tijdsvenster?", a:["14:00–15:00","14:00–16:00","16:00–18:00"], ok:1 }
+      tips:[
+        "Noem twee opties (voorkeur + alternatief).",
+        "Check wat je moet meenemen (justificatifs).",
+        "Herhaal datum/tijd ter bevestiging."
       ],
-      prompts: [
-        "Vraag om een afspraak met datum en tijd (vous-vorm).",
-        "Geef voorkeur (ochtend/middag).",
-        "Vraag om bevestiging (mail/sms).",
-        "Formuleer een nette verzet-vraag (reporter).",
-        "Herhaal samenvatting: datum, tijd, adres."
+      prompts:[
+        "Vraag RDV met datum/tijd.",
+        "Geef voorkeur (matin/après-midi).",
+        "Vraag bevestiging per e-mail/SMS."
       ],
-      lex: [
-        ["rendez-vous (RDV)","afspraak"],
-        ["créneau","tijdslot"],
-        ["reporter / avancer","verzetten / vervroegen"],
-        ["confirmation","bevestiging"],
-        ["disponibilités","beschikbaarheid"],
-        ["adresse complète","volledig adres"],
-        ["code / interphone","deurcode / belpaneel"],
-        ["entre … et …","tussen … en …"],
-        ["matin / après-midi","ochtend / middag"],
-        ["annuler","annuleren"]
+      lex:[
+        ["rendez-vous (RDV)","afspraak"],["créneau","tijdslot"],["reporter/annuler","verplaatsen/annuleren"],
+        ["confirmer","bevestigen"],["justificatifs","benodigde documenten"]
       ],
-      lexLink: LEX.afk,
-      pre: [
-        "Agenda open: 3 mogelijke tijdstippen klaar.",
-        "Adres + deurcode/interphone noteren.",
-        "Eigen nummer in tweetallen (voor terugbel)."
-      ],
-      pron: "Uitspraakfocus: é/è/ê (payé/père/être) voor heldere tijden en spelling."
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Kies twee tijdstippen.","Agenda en reistijd checken.","ID/justificatif(s) klaarleggen."]
     },
-
-    coord: {
-      title: "Adres / telefoon / e-mail dicteren",
-      targets: [
+    contact:{
+      targets:[
         "Je vous donne mon numéro par deux chiffres : zéro six – …",
-        "Je vous épelle l’adresse : rue …, numéro …, code postal …, ville …",
-        "Mon e-mail : prénom point nom arobase exemple point fr.",
-        "C’est bien 06, puis 28, 41, 90, 73 ?",
-        "Pourriez-vous répéter plus lentement, s’il vous plaît ?"
+        "Je vous épelle l’adresse : [rue], [numéro], [code postal], [ville].",
+        "Mon e-mail : prénom point nom arobase exemple point fr."
       ],
-      snacks: [
-        { t:"numbers", text:"« Indicatif +33, puis 6 12 34 56 78. »", q:"Wat doe je met de beginnende 0?", a:["Meelezen","Overslaan","Verdubbelen"], ok:1 },
-        { t:"read", text:"« Le livreur peut vous appeler 30 minutes avant. »", q:"Wat stelt men voor?", a:["Niet bellen","30 min van tevoren bellen","Een e-mail sturen"], ok:1 },
-        { t:"etiquette", text:"Kies de beste bevestigingszin:", q:"Welke is het meest beleefd?", a:["Répétez.","C’est bien 06, puis 28, 41… ?","Quoi ?"], ok:1 }
+      tips:[
+        "Telefoonnummer in vijf tweetallen, rustig ritme.",
+        "Spel straat/nummer/postcode/stad.",
+        "‘point’ (.) en ‘arobase’ (@) duidelijk uitspreken."
       ],
-      prompts: [
-        "Dicteer je telefoonnummer in vijf tweetallen (vous-stijl).",
-        "Spel straatnaam + huisnummer + postcode + plaats.",
-        "Dicteer e-mail met ‘point’ en ‘arobase’.",
-        "Vraag om te herhalen/confirmatie.",
-        "Spreek een bereikbaar tijdsvenster af."
+      prompts:[
+        "Zeg je nummer (5 tweetallen).",
+        "Spel het adres compleet.",
+        "Vraag een SMS/e-mail ter bevestiging."
       ],
-      lex: [
-        ["par deux chiffres","in tweetallen"],
-        ["arobase","@"],
-        ["point / tiret / tiret bas","punt / koppelteken / underscore"],
-        ["code postal / ville","postcode / plaats"],
-        ["étage / interphone / code","verdieping / bel / deurcode"],
-        ["indicatif +33","landcode +33 (eerste 0 vervalt)"],
-        ["répéter / plus lentement","herhalen / langzamer"],
-        ["joindre / rappeler","bereiken / terugbellen"],
-        ["confirm(er)","bevestigen"],
-        ["disponible","beschikbaar"]
+      lex:[
+        ["par deux chiffres","in tweetallen"],["arobase / point","@ / punt"],["code postal","postcode"],["étage / interphone / code","verdieping / bel / deurcode"]
       ],
-      lexLink: LEX.it,
-      pre: [
-        "Nummer als vijf tweetallen op papier.",
-        "Adres exact (met postcode + spelling).",
-        "E-mailsjabloon (prénom.point.nom@…)."
+      links:[{label:"IT/portalen",url:LEX.it},{label:"Afkortingen",url:LEX.afk}],
+      pre:["Nummer uitgeschreven in tweetallen.","Adresregels klaar.","E-mailsjabloon klaar."]
+    },
+    reach:{
+      targets:[
+        "Je vous entends mal. Pourriez-vous parler plus lentement ?",
+        "La ligne coupe, je vous rappelle tout de suite.",
+        "Pouvez-vous me rappeler, s’il vous plaît ?"
       ],
-      pron: "Uitspraakfocus: getallen & liaisons (deux‿euros / vous‿avez) en u/ou (vous/vu)."
+      tips:[
+        "Vraag om langzamer tempo, niet harder.",
+        "Herhaal kernwoorden na ruis.",
+        "Bied terugbeloptie met tijd."
+      ],
+      prompts:[
+        "Vraag om langzamer tempo.",
+        "Zeg dat je terugbelt.",
+        "Plan terugbelmoment."
+      ],
+      lex:[
+        ["la ligne coupe","de lijn valt weg"],["parler lentement","langzaam spreken"],["rappeler/être rappelé","(terug)bellen"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Zorg voor stil plekje.","Telefoon bijna vol? opladen.","Nummer in tweetallen paraat."]
+    },
+    levering:{
+      targets:[
+        "Le livreur peut m’appeler au 06 …",
+        "Je suis disponible entre 10h et 12h.",
+        "Pouvez-vous prévenir 30 minutes avant ?"
+      ],
+      tips:[
+        "Noem één venster (2 uur) i.p.v. halve dag.",
+        "Geef belnummer in tweetallen.",
+        "Vraag ‘prévenir’ (heads-up) 30 min vooraf."
+      ],
+      prompts:[
+        "Geef tijdvenster.",
+        "Geef telefoonnummer.",
+        "Vraag om vooraankondiging."
+      ],
+      lex:[
+        ["livreur / technicien","bezorger / monteur"],["créneau","tijdslot"],["prévenir","waarschuwen/heads-up"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Adres/poortcode klaar.","Tijdvenster gekozen.","Nummer in tweetallen."]
+    },
+    schade:{
+      targets:[
+        "Je voudrais déclarer un sinistre / un problème.",
+        "Pourriez-vous m’envoyer un devis ?",
+        "Quelles sont les démarches et les délais ?"
+      ],
+      tips:[
+        "Noem datum/uur van het incident.",
+        "Vraag referentienummer van je dossier.",
+        "Foto’s meteen aanbieden."
+      ],
+      prompts:[
+        "Meld probleem/sinistre.",
+        "Vraag devis + termijnen.",
+        "Noteer referentie/dossiernr."
+      ],
+      lex:[
+        ["sinistre","schadegeval"],["devis","offerte"],["dossier / référence","dossier / referentie"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Foto’s/locaties klaar.","Polis/attestation paraat.","Contact & bereikbaarheid vermelden."]
+    },
+    mairie:{
+      targets:[
+        "Je viens pour demander un document.",
+        "Quels justificatifs faut-il fournir ?",
+        "Est-ce qu’un rendez-vous est nécessaire ?"
+      ],
+      tips:[
+        "Vraag eerst naar lijst justificatifs.",
+        "Check of RDV verplicht is.",
+        "Vraag attestation/stempel (‘tampon’)."
+      ],
+      prompts:[
+        "Vraag document + justificatifs.",
+        "Vraag RDV of direct loket.",
+        "Vraag attestation/stempel."
+      ],
+      lex:[
+        ["justificatif de domicile","adresbewijs"],["pièce d’identité","ID"],["attestation","verklaring"],["tampon","stempel"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk},{label:"IT/portalen",url:LEX.it}],
+      pre:["Openingstijden checken.","Originelen + kopieën mee.","Dossiernummers noteren."]
+    },
+    voicemail:{
+      targets:[
+        "Bonjour, vous êtes bien sur le répondeur de [Nom].",
+        "Laissez votre message avec votre numéro; je vous rappelle.",
+        "Merci, bonne journée."
+      ],
+      tips:[
+        "Houd het onder 10 seconden.",
+        "Vraag altijd om nummer + herhaling.",
+        "Sluit beleefd af."
+      ],
+      prompts:[
+        "Spreek voicemailtekst in (kort).",
+        "Vraag nummer en tijdstip terugbel.",
+        "Beluister en korter maken."
+      ],
+      lex:[
+        ["répondeur","voicemail"],["laisser un message","bericht achterlaten"],["rappeler","terugbellen"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Voicemailtekst klaar (FR).","Telefoonnummer in tweetallen.","Beschikbare tijden bedenken."]
     }
   };
 
-  // UI refs
-  var scnSel = document.getElementById('scn');
-  var modeSel= document.getElementById('mode');
-  var goBtn  = document.getElementById('go');
-  var out    = document.getElementById('out');
-  var targets= document.getElementById('targets');
-  var snacks = document.getElementById('snacks');
-  var chkBtn = document.getElementById('chk');
-  var fb     = document.getElementById('fb');
-  var prompts= document.getElementById('prompts');
-  var pron   = document.getElementById('pron');
-  var lex    = document.getElementById('lex');
-  var lexlink= document.getElementById('lexlink');
-  var pre    = document.getElementById('pre');
-
+  var sEl=document.getElementById('scenario'), out=document.getElementById('out');
+  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), lex=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
   function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-  function cap(n, mode){ return mode===5 ? Math.min(n,3) : mode===10 ? Math.min(n,5) : n; }
-  function lexCount(mode){ return mode===5?6:(mode===10?10:15); }
-  function snackCount(mode){ return mode===5?1:(mode===10?2:Math.min(3,99)); }
-
   function render(){
-    var key = scnSel.value;
-    var mode = Number(modeSel.value||10);
-    var data = DB[key];
-    if(!data) return;
-
-    out.style.display='block';
-
-    // Doelzinnen
-    clear(targets);
-    var tmax = mode===20?Math.min(5,data.targets.length):3;
-    for(var i=0;i<tmax;i++){ var li=document.createElement('li'); li.textContent=data.targets[i]; targets.appendChild(li); }
-
-    // Snacks
-    clear(snacks); fb.textContent='';
-    var smax = snackCount(mode);
-    for(var s=0;s<Math.min(smax, data.snacks.length); s++){
-      var box = document.createElement('div');
-      box.style.border='1px solid #eee'; box.style.borderRadius='10px';
-      box.style.padding='8px'; box.style.margin='8px 0'; box.style.background='#f9f9f9';
-      var t = document.createElement('div'); t.textContent = data.snacks[s].text; t.style.margin='0 0 6px 0';
-      box.appendChild(t);
-      var q = document.createElement('div'); q.textContent = data.snacks[s].q; q.style.margin='0 0 4px 0';
-      box.appendChild(q);
-      for(var a=0;a<data.snacks[s].a.length; a++){
-        var id = 'sn_'+key+'_'+s+'_'+a;
-        var lab=document.createElement('label'); lab.setAttribute('for',id); lab.style.display='block'; lab.style.margin='2px 0';
-        var inp=document.createElement('input'); inp.type='radio'; inp.name='sn_'+key+'_'+s; inp.id=id; inp.value=a;
-        if(a===data.snacks[s].ok) inp.setAttribute('data-ok','1');
-        lab.appendChild(inp); lab.appendChild(document.createTextNode(' '+data.snacks[s].a[a]));
-        box.appendChild(lab);
-      }
-      snacks.appendChild(box);
-    }
-
-    // Prompts
-    clear(prompts);
-    var pmax = mode===5?3:(mode===10?5:Math.min(8,data.prompts.length));
-    for(var p=0;p<pmax;p++){ var li2=document.createElement('li'); li2.textContent=data.prompts[p]; prompts.appendChild(li2); }
-    pron.textContent = data.pron || '';
-
-    // Lexicon
-    clear(lex);
-    var L = data.lex.slice(0, Math.min(lexCount(mode), data.lex.length));
-    for(var j=0;j<L.length;j++){
-      var span=document.createElement('span'); span.innerHTML = "<strong>"+L[j][0]+"</strong> — "+L[j][1];
-      lex.appendChild(span);
-    }
-    var more = data.lexLink || LEX.tag;
-    lexlink.innerHTML = '➡ Volledige lijsten op Nederlanders.fr: <a href="'+more+'">'+more+'</a>';
-
-    // Pre-flight
-    clear(pre);
-    for(var k=0;k<data.pre.length;k++){ var li3=document.createElement('li'); li3.textContent=data.pre[k]; pre.appendChild(li3); }
-
-    window.scrollTo(0,0);
+    var key=sEl.value, d=BANK[key]; if(!d) return;
+    clear(t); d.targets.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; t.appendChild(li); });
+    clear(tips); d.tips.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
+    clear(p); d.prompts.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; p.appendChild(li); });
+    clear(lex); d.lex.forEach(function(x){ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
+    link.innerHTML = (d.links||[]).map(function(l){ return '<a href="'+l.url+'" style="color:#800000">'+l.label+'</a>'; }).join(' · ');
+    clear(pre); d.pre.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
+    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
   }
-
-  function check(){
-    var radios = snacks.querySelectorAll('input[type="radio"]');
-    var groups = {};
-    for(var i=0;i<radios.length;i++){ groups[radios[i].name]=true; }
-    var names = Object.keys(groups), correct=0;
-    for(var g=0; g<names.length; g++){
-      var sel = snacks.querySelector('input[name="'+names[g]+'"]:checked');
-      if(sel && sel.getAttribute('data-ok')==='1') correct++;
-    }
-    fb.textContent = (names.length? (correct+' / '+names.length) : '—');
-    fb.className = (correct===names.length)?'ok':'warn';
-  }
-
   document.getElementById('go').addEventListener('click', render);
-  document.getElementById('chk').addEventListener('click', check);
 })();
 </script>
-

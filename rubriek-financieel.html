@@ -1,0 +1,185 @@
+<!doctype html><meta charset="utf-8">
+<title>Financieel (bank & betalen) – NLFR Preflight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;">
+  <h1 style="margin:0 0 8px;color:#800000">Financieel (bank & betalen)</h1>
+  <p style="margin:0 0 12px;">Kies je subrubriek. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → Pre-flight. <strong>“Vous” is standaard.</strong></p>
+
+  <div style="border:1px solid #eee;border-radius:10px;padding:10px;background:#fafafa;margin:10px 0;">
+    <label style="display:block;margin:6px 0 4px;"><strong>Subrubriek</strong></label>
+    <select id="scenario" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;">
+      <option value="compte">Rekening openen</option>
+      <option value="rib">RIB & incasso’s</option>
+      <option value="carte">Kaart & limieten (sans contact)</option>
+      <option value="cheque">Cheque & bonnetje</option>
+      <option value="virement">Overboeking & Paylib</option>
+      <option value="pbcarte">Problemen: kaart geweigerd</option>
+    </select>
+    <div style="margin-top:10px"><button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon</button></div>
+  </div>
+
+  <div id="out" style="display:none">
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;"><h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul><div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div></section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;"><h2 style="margin:0 0 6px;font-size:18px;">Pre-flight</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul></section>
+  </div>
+
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">naar Nederlanders.fr</a>. “Vous” is default.</footer>
+</div>
+<script>
+(function(){
+  var LEX={afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen"};
+  var BANK={
+    compte:{
+      targets:[
+        "Je voudrais ouvrir un compte courant, s’il vous plaît.",
+        "Voici mon justificatif de domicile et ma pièce d’identité.",
+        "Pourriez-vous me fournir un RIB ?"
+      ],
+      tips:[
+        "Neem ID + justificatif de domicile mee (print/digitaal).",
+        "Vraag meteen om RIB en kaarttype + limieten.",
+        "Noteer kosten (‘frais de tenue’) en doorlooptijd."
+      ],
+      prompts:[
+        "Vraag om rekening (compte courant).",
+        "Vraag RIB + kaart + limieten.",
+        "Vraag naar kosten en activatie."
+      ],
+      lex:[
+        ["compte courant","betaalrekening"],["RIB","FR-IBAN"],["frais (de tenue)","kosten"],["plafond","limiet"],["prélèvement","incasso"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["ID + justificatif klaar.","FR-mobiel voor 2FA.","Lijst incasso’s om over te zetten."]
+    },
+    rib:{
+      targets:[
+        "Je voudrais mettre en place des prélèvements (énergie, internet).",
+        "Pourriez-vous activer les virements sortants ?",
+        "J’ai besoin d’un RIB tout de suite."
+      ],
+      tips:[
+        "Vraag incasso voor vaste lasten (EDF/eau/internet).",
+        "Check of uitgaande overboekingen (plafond) open staan.",
+        "Bewaar RIB pdf in je telefoon."
+      ],
+      prompts:[
+        "Vraag incasso’s te activeren.",
+        "Vraag plafond virement/prélèvement.",
+        "Vraag bevestiging per e-mail."
+      ],
+      lex:[
+        ["prélèvement automatique","automatische incasso"],["virement","overboeking"],["plafond de virement","overboekingslimiet"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Lijst leveranciers.","RIB digitaal bij de hand.","Bevestiging e-mailadres controleren."]
+    },
+    carte:{
+      targets:[
+        "Je souhaite une carte bancaire avec paiement sans contact.",
+        "Quels sont les plafonds (paiement/retrait) ?",
+        "Pouvez-vous ajuster le plafond temporairement ?"
+      ],
+      tips:[
+        "Contactloos handig; vraag tijdelijke verhoging bij grote uitgave.",
+        "Vraag aparte limieten: betalen vs. opnemen.",
+        "Noteer noodnummer bij verlies."
+      ],
+      prompts:[
+        "Vraag kaarttype + contactloos.",
+        "Vraag plafonds + tijdelijke verhoging.",
+        "Vraag noodprocedure bij verlies."
+      ],
+      lex:[
+        ["carte bancaire","betaalpas"],["sans contact","contactloos"],["plafond","limiet"],["opposition","blokkeerprocedure"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Identiteit + adres bevestigd.","Verwachte grote uitgaven?","Noodnummer noteren."]
+    },
+    cheque:{
+      targets:[
+        "Est-ce que vous acceptez les chèques ?",
+        "J’ai besoin d’un chéquier.",
+        "Pouvez-vous me donner un reçu, s’il vous plaît ?"
+      ],
+      tips:[
+        "Cheque niet overal gangbaar; vraag eerst.",
+        "Bewaar nummers; schrijf leesbaar bedrag voluit.",
+        "Vraag altijd om ‘reçu/ticket’."
+      ],
+      prompts:[
+        "Vraag of cheque kan.",
+        "Vraag om chéquier.",
+        "Vraag om bon/reçu."
+      ],
+      lex:[
+        ["chèque/chéquier","cheque/chequeboek"],["reçu/ticket","bon"],["encaisser","innen"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["ID voor uitgifte chéquier.","Naam/handtekening controleren.","Gebruiksvlak cheque uitleg vragen."]
+    },
+    virement:{
+      targets:[
+        "Je voudrais faire un virement vers un nouveau bénéficiaire.",
+        "Pouvez-vous augmenter le plafond aujourd’hui ?",
+        "Pourriez-vous activer Paylib ?"
+      ],
+      tips:[
+        "Nieuwe begunstigde → soms 24h wachttijd.",
+        "Vraag tijdelijke plafondverhoging voor grote bedragen.",
+        "Paylib kan handig zijn voor kleine P2P-betalingen."
+      ],
+      prompts:[
+        "Vraag om nieuwe begunstigde in te voeren.",
+        "Vraag plafondverhoging met reden.",
+        "Vraag Paylib-activatie."
+      ],
+      lex:[
+        ["bénéficiaire","begunstigde"],["délai","wachttijd"],["Paylib","FR P2P-betaling"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["IBAN van begunstigde.","Bedrag + reden paraat.","Bevestiging (sms-code) mogelijk nodig."]
+    },
+    pbcarte:{
+      targets:[
+        "Ma carte a été refusée. Pouvez-vous vérifier ?",
+        "Est-ce un problème de plafond ou de terminal ?",
+        "Puis-je avoir une solution provisoire ?"
+      ],
+      tips:[
+        "Check eerst plafond; andere terminal proberen.",
+        "Vraag tijdelijke verhoging of contant opnemen.",
+        "Noteer incidentnummer."
+      ],
+      prompts:[
+        "Leg situatie uit (waar/wanneer).",
+        "Vraag controle limieten/terminal.",
+        "Vraag tijdelijke oplossing + bevestiging."
+      ],
+      lex:[
+        ["CB refusée","pas geweigerd"],["plafond","limiet"],["terminal (TPE)","pinapparaat"],["incident","incidentmelding"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:["Locatie/tijd + bon/foto.","RIB/kaartnummer laatste 4 cijfers.","Telefoonnummer paraat."]
+    }
+  };
+
+  var s=document.getElementById('scenario'), out=document.getElementById('out');
+  var t=document.getElementById('targets'), tips=document.getElementById('tips'), p=document.getElementById('prompts'), l=document.getElementById('lex'), link=document.getElementById('lexLink'), pre=document.getElementById('pre');
+  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+  function render(){
+    var d=BANK[s.value]; if(!d) return;
+    [t,tips,p,l,pre].forEach(clear);
+    d.targets.forEach(x=>{var li=document.createElement('li'); li.textContent=x; t.appendChild(li);});
+    d.tips.forEach(x=>{var li=document.createElement('li'); li.textContent=x; tips.appendChild(li);});
+    d.prompts.forEach(x=>{var li=document.createElement('li'); li.textContent=x; p.appendChild(li);});
+    d.lex.forEach(x=>{var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; l.appendChild(li);});
+    document.getElementById('lexLink').innerHTML=(d.links||[]).map(lk=>'<a href="'+lk.url+'" style="color:#800000">'+lk.label+'</a>').join(' · ');
+    d.pre.forEach(x=>{var li=document.createElement('li'); li.textContent=x; pre.appendChild(li);});
+    out.style.display='block'; window.scrollTo(0, document.getElementById('app').offsetTop);
+  }
+  document.getElementById('go').addEventListener('click', render);
+})();
+</script>
