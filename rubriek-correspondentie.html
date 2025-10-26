@@ -1,0 +1,373 @@
+<!doctype html><meta charset="utf-8">
+<title>Correspondentie (e-mail) – NLFR Preflight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
+  <h1 style="margin:0 0 8px;color:#800000">Correspondentie – e-mail</h1>
+
+  <!-- NAV -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
+    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
+            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
+  </div>
+
+  <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>. 
+    <strong>“Vous” is standaard.</strong></p>
+
+  <!-- SUBRUBRIEKEN ALS KNOPPEN -->
+  <div id="subs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0 12px;">
+    <button class="subbtn" data-key="greeting">Aanspreking (begroeting)</button>
+    <button class="subbtn" data-key="opening">Openingszinnen</button>
+    <button class="subbtn" data-key="content">Inhoud & verzoeken</button>
+    <button class="subbtn" data-key="closing">Afsluiten & ondertekenen</button>
+    <button class="subbtn" data-key="subject">Onderwerp & bijlagen</button>
+    <button class="subbtn" data-key="followup">Follow-up / herinnering</button>
+    <button class="subbtn" data-key="tone">Toon & gouden regels</button>
+    <button class="subbtn" data-key="templates">Voorbeeldblokken (kort)</button>
+  </div>
+
+  <!-- Primair: “Toon” -->
+  <div style="margin:6px 0 12px;">
+    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
+    <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="out" style="display:none">
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
+      <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
+    </section>
+    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
+      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+    </section>
+  </div>
+
+  <footer style="margin-top:8px;font-size:12.5px;color:#555;">
+    Lexicons:
+    <a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" style="color:#800000;">Franse afkortingen</a> ·
+    <a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" style="color:#800000;">IT/portalen (FranceConnect)</a> ·
+    <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Alle lexicons</a>.
+    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
+  </footer>
+</div>
+
+<style>
+  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
+  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
+</style>
+
+<script>
+(function(){
+  var LEX={
+    tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon",
+    afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
+    it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen"
+  };
+
+  var BANK={
+    greeting:{
+      targets:[
+        "Madame, Monsieur,",
+        "Madame,",
+        "Monsieur,",
+        "Madame la Présidente, / Monsieur le Directeur,",
+        "Mesdames, Messieurs,",
+        "Bonjour Madame Dupont, / Bonjour Monsieur Martin,",
+        "Cher Monsieur Martin, / Chère Madame Dupont,",
+        "Chers collègues, / Bonjour à tous,"
+      ],
+      tips:[
+        "Gebruik altijd **vous**; stap alleen over op **tu** als de ander dat voorstelt.",
+        "Titel gebruiken bij functie: *Madame la Présidente*, *Monsieur le Directeur*.",
+        "Groep: *Mesdames, Messieurs,* of informeel *Bonjour à tous,* (bij vaste collega’s)."
+      ],
+      prompts:[
+        "Bepaal de relatie (onbekend, formeel bekend, collega’s).",
+        "Kies passende aanspreking; controleer naam en titel.",
+        "Vermijd voornamen in formele context, tenzij gebruikelijk."
+      ],
+      lex:[
+        ["à l’attention de (À l’attention de)","ter attentie van"],
+        ["objet","onderwerpregel"],
+        ["destinataire / expéditeur","geadresseerde / afzender"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Naam/titel ontvanger controleren (spelling, accenten).",
+        "Relatie inschatten → formele aanspreking kiezen.",
+        "Onderwerp kort en functioneel formuleren (≤ 9 woorden)."
+      ]
+    },
+
+    opening:{
+      targets:[
+        "Je m’adresse à vous pour…",
+        "Je m’adresse à vous avec la question suivante :",
+        "Je vous remercie de votre réponse rapide.",
+        "Je vous écris pour demander des renseignements sur…",
+        "Je prends la liberté de vous écrire pour…",
+        "Je vous remercie pour votre lettre du [date]."
+      ],
+      tips:[
+        "Kom direct ter zake in zin 1–2.",
+        "Verwijs naar context: datum, referentie, gesprek.",
+        "Gebruik korte alinea’s met witregels (scanbaar)."
+      ],
+      prompts:[
+        "Schrijf 1 contextzin (referentie, datum, dossier).",
+        "Formuleer 1 doelzin (wat u wilt bereiken).",
+        "Voeg 1 concrete vraag of actiepunt toe."
+      ],
+      lex:[
+        ["renseignements","inlichtingen/informatie"],
+        ["référence / dossier","referentie / dossier"],
+        ["ci-joint / en pièce jointe","bijgevoegd (bijlage)"]
+      ],
+      links:[{label:"IT/portalen",url:LEX.it}],
+      pre:[
+        "Onderwerpregel in dezelfde woorden als doelzin.",
+        "Bijlagen hernoemen: *Nom_Document_v1.pdf*.",
+        "Contactgegevens onderaan paraat."
+      ]
+    },
+
+    content:{
+      targets:[
+        "Comme discuté lors de notre réunion/entretien…",
+        "Concernant notre projet à venir…",
+        "Pourriez-vous m’indiquer le prix ?",
+        "J’aimerais vous demander quelques renseignements au sujet de…",
+        "Une copie de [document] se trouve en annexe.",
+        "Vous serait-il possible de m’envoyer… ?",
+        "Pourriez-vous me contacter au [numéro] ?"
+      ],
+      tips:[
+        "Schrijf in bullets als er meerdere verzoeken zijn.",
+        "Gebruik **conditionnel de politesse**: *Pourriez-vous… ?*",
+        "Verwijs expliciet naar bijlage(n) in de tekst."
+      ],
+      prompts:[
+        "Som 2–3 vragen/verzoeken als bullets.",
+        "Verwijs naar 1 bijlage en actie daarop.",
+        "Zet een zachte deadline of vervolgstap."
+      ],
+      lex:[
+        ["devis / offre","offerte"],
+        ["délai / échéance","termijn / deadline"],
+        ["rappel / relance","herinnering / opvolging"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Controleer nummers/data (FR-notatie: jj/mm/aaaa).",
+        "Maak ‘vraagblok’ scanbaar (bullets, 1 regel per vraag).",
+        "Telefoonnummer in vijf tweetallen (uitspraakcheck)."
+      ]
+    },
+
+    closing:{
+      targets:[
+        "Nous vous contacterons dans les plus brefs délais.",
+        "N’hésitez pas à me contacter si vous avez besoin d’informations supplémentaires.",
+        "Nous nous tenons à votre disposition pour toute question.",
+        "Nous espérons avoir pu vous fournir toutes les informations nécessaires.",
+        "Nous vous serions reconnaissants de bien vouloir nous faire parvenir votre réponse avant le [date].",
+        "Cordialement, / Bien cordialement,",
+        "Salutations, / Sincères salutations,",
+        "Veuillez agréer, Madame, Monsieur, mes sincères salutations."
+      ],
+      tips:[
+        "Kies 1 afsluitzin + 1 groet; niet stapelen.",
+        "Zeer formeel (anonieme aanhef) → lange formule.",
+        "Zet naam, functie, organisatie, telefoon onder de groet."
+      ],
+      prompts:[
+        "Schrijf 1 afsluitende ‘service’-zin.",
+        "Kies groet passend bij aanhef.",
+        "Plaats volledige handtekening (FR-opmaak)."
+      ],
+      lex:[
+        ["formule de politesse","afsluitformule"],
+        ["signature / coordonnées","handtekening / contactgegevens"],
+        ["PJ (pièce jointe)","bijlage"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Handtekeningblok up-to-date (naam, functie, mobiele nr.).",
+        "Eventuele disclaimers of wettelijke vermeldingen (indien nodig).",
+        "Controle op dubbele spaties, accenten en typfouten."
+      ]
+    },
+
+    subject:{
+      targets:[
+        "Objet : Demande d’informations concernant [sujet]",
+        "Objet : Confirmation de rendez-vous – [date/heure]",
+        "Objet : Envoi de documents – [référence]"
+      ],
+      tips:[
+        "Houd het **kort en functioneel** (± 5–9 woorden).",
+        "Zet 1 sleutelwoord vooraan: *Demande*, *Confirmation*, *Envoi*.",
+        "Vermijd ALL CAPS en vage termen (*Question*, *Bonjour*)."
+      ],
+      prompts:[
+        "Formuleer 3 varianten; kies de duidelijkste.",
+        "Zet datum/uur als het om afspraken gaat.",
+        "Laat onderwerp overeenkomen met eerste zin."
+      ],
+      lex:[
+        ["objet","onderwerp"],
+        ["en copie (cc) / cci","in cc / bcc"],
+        ["accusé de réception (AR)","ontvangstbevestiging"]
+      ],
+      links:[{label:"IT/portalen",url:LEX.it}],
+      pre:[
+        "Bijlagen als PDF, logische bestandsnamen.",
+        "Controleer dat bijlagen **echt** zijn toegevoegd.",
+        "Testlink(s) in de tekst even aanklikken."
+      ]
+    },
+
+    followup:{
+      targets:[
+        "Je me permets de revenir vers vous concernant…",
+        "Auriez-vous eu le temps de prendre connaissance de mon message du [date] ?",
+        "Pourriez-vous me tenir informé(e) de l’avancement ?",
+        "Sauf erreur de ma part, je n’ai pas eu de retour."
+      ],
+      tips:[
+        "Wacht redelijke termijn; blijf beleefd (geen druk).",
+        "Verwijs naar datum/onderwerp van vorige mail.",
+        "Voeg 1 duidelijke vraag/actie toe."
+      ],
+      prompts:[
+        "Schrijf 1 regel context (datum + onderwerp).",
+        "Stel 1 precieze vraag met zachte deadline.",
+        "Bedank alvast voor terugkoppeling."
+      ],
+      lex:[
+        ["relance / rappel","opvolging / herinnering"],
+        ["dans les meilleurs délais","zo snel mogelijk"],
+        ["prise de contact","contactopname"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Check spam/alternatieve kanalen (portaal, sms).",
+        "Citeer vorige mailonderwerp exact.",
+        "Houd toon neutraal en feitelijk."
+      ]
+    },
+
+    tone:{
+      targets:[
+        "Trois règles d’or : concis, vous, relire.",
+        "Restez formel mais clair : phrases courtes, une idée par ligne.",
+        "Utilisez le conditionnel de politesse : *Pourriez-vous… ?*"
+      ],
+      tips:[
+        "Kort en bondig; witregels gebruiken.",
+        "**Vous** aanhouden; *tu* alleen bij expliciete toestemming.",
+        "Altijd herlezen; accenten en datumnotatie controleren."
+      ],
+      prompts:[
+        "Maak je mail 25% korter door 1 bijzin te schrappen.",
+        "Vervang bevelsvormen door *Pourriez-vous… ?*",
+        "Lees hardop; check flow en beleefdheid."
+      ],
+      lex:[
+        ["registre (de langue)","toon/register"],
+        ["politesse / courtoisie","beleefdheid"],
+        ["formule de relance","herinneringsformule"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Doelzin formuleren vóór je begint te typen.",
+        "Max. 3 alinea’s; 1 onderwerp per alinea.",
+        "Naam/telefoon in Franse uitspraak paraat (5×2)."
+      ]
+    },
+
+    templates:{
+      targets:[
+        "[Demande d’informations – court]\nBonjour Madame/Monsieur,\nJe m’adresse à vous pour demander des renseignements concernant [sujet]. Pourriez-vous m’indiquer [question précise] ?\nVous trouverez en pièce jointe [document].\nCordialement,\n[Nom] – [Téléphone]",
+        "[Confirmation de rendez-vous]\nBonjour Madame/Monsieur [Nom],\nJe vous confirme notre rendez-vous du [date] à [heure] à [lieu/visioconférence].\nMerci de me signaler toute contrainte éventuelle.\nBien cordialement,\n[Nom] – [Téléphone]"
+      ],
+      tips:[
+        "Kopieer, vul haakjes in, klaar.",
+        "Hou templates kort; voeg 1 bijlage max. toe.",
+        "Onderwerp laten matchen met eerste regel."
+      ],
+      prompts:[
+        "Vervang [sujet], [question], [date/heure/lieu].",
+        "Check handtekeninggegevens.",
+        "Verzend testmail aan jezelf (opmaak)."
+      ],
+      lex:[
+        ["visioconférence","videogesprek"],
+        ["contraintes","beperkingen"],
+        ["pièce jointe (PJ)","bijlage"]
+      ],
+      links:[{label:"Afkortingen",url:LEX.afk}],
+      pre:[
+        "Template eerst offline invullen.",
+        "Bijlage als PDF controleren (leesbaar op mobiel).",
+        "Onderwerp en eerste zin identiek thema."
+      ]
+    }
+  };
+
+  // ----- UI wiring -----
+  var selKey=null;
+  var out=document.getElementById('out');
+  var targets=document.getElementById('targets'), tips=document.getElementById('tips'),
+      prompts=document.getElementById('prompts'), lex=document.getElementById('lex'),
+      pre=document.getElementById('pre'), lexLink=document.getElementById('lexLink');
+
+  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), b=>b.classList.remove('active'));
+      this.classList.add('active'); selKey=this.getAttribute('data-key');
+      var note=document.getElementById('selNote'); if(note) note.textContent='geselecteerd: '+this.textContent;
+      render(selKey);
+    });
+  });
+
+  document.getElementById('go').addEventListener('click', function(){
+    if(!selKey){ var note=document.getElementById('selNote'); if(note) note.textContent='(kies eerst een subrubriek)'; return; }
+    render(selKey);
+  });
+
+  function render(key){
+    var d=BANK[key]; if(!d) return;
+    [targets,tips,prompts,lex,pre].forEach(clear);
+
+    d.targets.forEach(function(x){
+      var li=document.createElement('li');
+      if(x.indexOf('\n')>-1){ li.style.whiteSpace='pre-wrap'; }
+      li.textContent=x; targets.appendChild(li);
+    });
+    d.tips.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
+    d.prompts.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
+    d.lex.forEach(function(x){ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
+
+    var links=(d.links||[]).map(function(u){return '<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>';}).join(' · ');
+    lexLink.innerHTML = links;
+
+    d.pre.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
+
+    out.style.display='block';
+    window.scrollTo(0, document.getElementById('app').offsetTop);
+  }
+})();
+</script>
