@@ -1,187 +1,250 @@
 <!doctype html><meta charset="utf-8">
 <title>Franse taal – contextuele module</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:1040px;margin:24px auto;padding:16px;color:#111;">
+<style>
+  :root{
+    --maroon:#800000;
+    --tile-bg:#f6f6f8;        /* lichtgrijs op wit */
+    --tile-bd:#e7e7ea;
+    --ink:#111;
+    --muted:#555;
+    --muted2:#666;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font:14.5px/1.55 Arial,Helvetica,sans-serif}
+  .wrap{max-width:1040px;margin:24px auto;padding:16px}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .tile{
+    display:block;text-decoration:none;color:var(--ink);
+    background:var(--tile-bg);border:1px solid var(--tile-bd);border-radius:14px;
+    padding:14px 16px;box-shadow:0 1px 2px rgba(0,0,0,.04);
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .tile:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.08);border-color:#d7d7db}
+  .tile h3{margin:0 0 6px;font-size:18px;color:var(--maroon)}
+  .tile .sub{margin-top:8px;font-size:12.5px;color:#666}
+  .panel{
+    border:1px solid #eee;border-radius:14px;padding:14px 16px;background:#fff
+  }
+  .hdr h1{margin:0 0 6px;color:var(--maroon);font-size:26px}
+  .searchrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .searchrow input{flex:1;min-width:260px;padding:10px;border:1px solid #ddd;border-radius:10px}
+  .btn{padding:10px 12px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer}
+  /* Lexicon band (30% maroon, witte tekst) */
+  .lexband{
+    margin-top:16px;border-radius:14px;padding:14px 16px;
+    background:rgba(128,0,0,.30); color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
+  }
+  .lexband h2{margin:0 0 8px;font-size:18px;color:#fff}
+  .lexband p{margin:0 0 8px}
+  .lexband a{color:#fff;font-weight:600;text-decoration:underline}
+  .lexband ul{margin:6px 0 0 18px;line-height:1.6}
+  /* “App” hint */
+  .apphint{
+    margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    border:1px dashed rgba(128,0,0,.35); border-radius:12px; padding:10px 12px; background:#fff6f6;
+  }
+  .apphint button{
+    border:1px solid var(--maroon); background:var(--maroon); color:#fff; border-radius:10px; padding:8px 10px; cursor:pointer;
+  }
+  footer{margin-top:12px;font-size:12.5px;color:var(--muted)}
+  footer a{color:var(--maroon)}
+</style>
+
+<div class="wrap">
   <!-- Header -->
-  <header style="border:1px solid #eee;border-radius:14px;padding:14px 16px;background:#fff;">
-    <h1 style="margin:0 0 6px;color:#800000;font-size:26px;">Franse taal – contextuele module</h1>
-    <p style="margin:4px 0 10px;font-size:14.5px;line-height:1.5;">
-      Kies je <strong>hoofdrubriek</strong>, dan je <em>subrubriek/scenario</em>. Je krijgt: <strong>Doelzinnen</strong>, 
-      <strong>Taaltips</strong>, <strong>Spreekprompts</strong>, <strong>Micro-lexicon</strong> en <strong>Voorbereiden</strong>. 
-      <span style="white-space:nowrap;">Aanspreekvorm: <strong>vous</strong> (default).</span>
+  <header class="panel hdr">
+    <h1>Franse taal – contextuele module</h1>
+    <p style="margin:4px 0 10px;">
+      Kies je <strong>hoofdrubriek</strong>, dan je <em>subrubriek/scenario</em>. Je krijgt:
+      <strong>Doelzinnen</strong>, <strong>Taaltips</strong>, <strong>Spreekprompts</strong>,
+      <strong>Micro-lexicon</strong> en <strong>Voorbereiden</strong>.
+      <span style="white-space:nowrap">Aanspreekvorm: <strong>vous</strong> (default).</span>
     </p>
 
     <!-- Zoeken -->
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <input id="q" type="search" placeholder="Zoek op rubriek, subrubriek of woordenlijst…"
-             style="flex:1;min-width:260px;padding:10px;border:1px solid #ddd;border-radius:10px">
-      <button type="button" onclick="document.getElementById('q').value='';filterCards();"
-              style="padding:10px 12px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset</button>
+    <div class="searchrow">
+      <input id="q" type="search" placeholder="Zoek op rubriek, subrubriek of woordenlijst…">
+      <button class="btn" type="button" onclick="document.getElementById('q').value='';filterCards();">Reset</button>
+    </div>
+
+    <!-- App hint -->
+    <div class="apphint">
+      <div style="flex:1;min-width:220px">
+        <strong>Op je telefoon gebruiken?</strong> Voeg deze pagina toe aan je beginscherm voor een app-ervaring.
+      </div>
+      <button type="button" onclick="showInstallHelp()">Op je beginscherm</button>
+      <div id="installHelp" style="display:none;color:#333;width:100%;margin-top:4px;font-size:13.5px;line-height:1.5;">
+        <div><strong>iPhone/iPad (Safari):</strong> Tik <em>delen</em> ▸ <em>Zet op beginscherm</em>.</div>
+        <div><strong>Android (Chrome):</strong> Menu ⋮ ▸ <em>Install app</em> of <em>Toevoegen aan startscherm</em>.</div>
+      </div>
     </div>
   </header>
 
   <!-- Tegels / knoppen -->
-  <section id="cards" aria-label="Hoofdrubrieken"
-           style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:14px;">
+  <section id="cards" aria-label="Hoofdrubrieken" class="card-grid" style="margin-top:14px;">
     <!-- 1 Telefoongesprek -->
-    <a class="card" data-tags="telefoon telefoongesprek afspraak rdv doorverbinden voicemail nummer dicteren"
-       href="./rubriek-telefoongesprek.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Het telefoongesprek</div>
-      <div style="color:#333;font-size:14px;">Openen, doorverbinden, gegevens dicteren, afspraak bevestigen, voicemail.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Opening & doorverbinden • Afspraak • Contactgegevens • Slecht bereik • Levering/technicus • Schade/klacht • Mairie bellen • Voicemail • <em>Telefoonnummer (spreek & check)</em></div>
+    <a class="tile card" data-tags="telefoon telefoongesprek afspraak rdv doorverbinden voicemail nummer dicteren"
+       href="./rubriek-telefoongesprek.html">
+      <h3>Het telefoongesprek</h3>
+      <div style="color:#333">Openen, doorverbinden, gegevens dicteren, afspraak bevestigen, voicemail.</div>
+      <div class="sub">Sub: Opening & doorverbinden • Afspraak • Contactgegevens • Slecht bereik • Levering/technicus • Schade/klacht • Mairie bellen • Voicemail • <em>Telefoonnummer (spreek & check)</em></div>
     </a>
 
     <!-- 2 Shopping -->
-    <a class="card" data-tags="boodschappen bakker slager groenteboer poelier visboer supermarkt betalen carte espèces chèque"
-       href="./rubriek-shopping.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Shopping</div>
-      <div style="color:#333;font-size:14px;">Bakker, slager, groenteboer, poelier, visboer, supermarkt, betalen.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Boulangerie • Boucherie • Primeur • Poissonnier • Volailler • Supermarché • Betalen</div>
+    <a class="tile card" data-tags="boodschappen bakker slager groenteboer poelier visboer supermarkt betalen carte espèces chèque"
+       href="./rubriek-shopping.html">
+      <h3>Shopping</h3>
+      <div style="color:#333">Bakker, slager, groenteboer, poelier, visboer, supermarkt, betalen.</div>
+      <div class="sub">Sub: Boulangerie • Boucherie • Primeur • Poissonnier • Volailler • Supermarché • Betalen</div>
     </a>
 
     <!-- 3 Financieel -->
-    <a class="card" data-tags="bank rib incasso kaart limiet cheque virement paylib plafond"
-       href="./rubriek-financieel.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Financieel (bank & betalen)</div>
-      <div style="color:#333;font-size:14px;">Rekening openen, RIB, incasso’s, limieten, kaart/contactloos, problemen.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Rekening • RIB & incasso • Kaart/limiet • Cheque • Overboeking/Paylib • Kaart geweigerd</div>
+    <a class="tile card" data-tags="bank rib incasso kaart limiet cheque virement paylib plafond"
+       href="./rubriek-financieel.html">
+      <h3>Financieel (bank & betalen)</h3>
+      <div style="color:#333">Rekening openen, RIB, incasso’s, limieten, kaart/contactloos, problemen.</div>
+      <div class="sub">Sub: Rekening • RIB & incasso • Kaart/limiet • Cheque • Overboeking/Paylib • Kaart geweigerd</div>
     </a>
 
     <!-- 4 Huishouden & onderhoud -->
-    <a class="card" data-tags="verzekering mrh rc internet box zwembad ongedierte aannemers devis"
-       href="./rubriek-huishouden.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Huishouden & onderhoud</div>
-      <div style="color:#333;font-size:14px;">MRH/RC, internet/box, zwembad, ongedierte, aannemers/leveranciers.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Verzekering MRH/RC • Internet/box • Zwembad • Ongedierte • Aannemers</div>
+    <a class="tile card" data-tags="verzekering mrh rc internet box zwembad ongedierte aannemers devis"
+       href="./rubriek-huishouden.html">
+      <h3>Huishouden & onderhoud</h3>
+      <div style="color:#333">MRH/RC, internet/box, zwembad, ongedierte, aannemers/leveranciers.</div>
+      <div class="sub">Sub: Verzekering MRH/RC • Internet/box • Zwembad • Ongedierte • Aannemers</div>
     </a>
 
     <!-- 5 Mairie & administratie -->
-    <a class="card" data-tags="mairie administratie justificatifs attestation rdv guichet formulier"
-       href="./rubriek-mairie.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Mairie & administratie</div>
-      <div style="color:#333;font-size:14px;">Justificatifs, attestation, RDV, formulieren, FranceConnect(+).</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Document/attestation • RDV & justificatifs</div>
+    <a class="tile card" data-tags="mairie administratie justificatifs attestation rdv guichet formulier"
+       href="./rubriek-mairie.html">
+      <h3>Mairie & administratie</h3>
+      <div style="color:#333">Justificatifs, attestation, RDV, formulieren, FranceConnect(+).</div>
+      <div class="sub">Sub: Document/attestation • RDV & justificatifs</div>
     </a>
 
     <!-- 6 Gezondheidszorg -->
-    <a class="card" data-tags="gezondheid cpam carte vitale mutuelle huisarts apotheek ordonnance"
-       href="./rubriek-gezondheid.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Gezondheidszorg</div>
-      <div style="color:#333;font-size:14px;">CPAM/Carte Vitale, mutuelle, huisarts, apotheek.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Huisartsbezoek • Apotheek/ordonnance</div>
+    <a class="tile card" data-tags="gezondheid cpam carte vitale mutuelle huisarts apotheek ordonnance"
+       href="./rubriek-gezondheid.html">
+      <h3>Gezondheidszorg</h3>
+      <div style="color:#333">CPAM/Carte Vitale, mutuelle, huisarts, apotheek.</div>
+      <div class="sub">Sub: Huisartsbezoek • Apotheek/ordonnance</div>
     </a>
 
     <!-- 7 Wonen & vastgoed -->
-    <a class="card" data-tags="huis kopen bezichtigen makelaar notaris compromis acte dpe diagnostics servitudes"
-       href="./rubriek-wonen.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Wonen & vastgoed</div>
-      <div style="color:#333;font-size:14px;">Bezichtigen, makelaar/notaris, DPE/diagnostics, servitudes/bornage.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Bezichtigen (vragenlijst) • Makelaar/Notaris & compromis</div>
+    <a class="tile card" data-tags="huis kopen bezichtigen makelaar notaris compromis acte dpe diagnostics servitudes"
+       href="./rubriek-wonen.html">
+      <h3>Wonen & vastgoed</h3>
+      <div style="color:#333">Bezichtigen, makelaar/notaris, DPE/diagnostics, servitudes/bornage.</div>
+      <div class="sub">Sub: Bezichtigen (vragenlijst) • Makelaar/Notaris & compromis</div>
     </a>
 
     <!-- 8 Auto & mobiliteit -->
-    <a class="card" data-tags="auto ants carte grise controle technique garage devis tol critair"
-       href="./rubriek-auto.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Auto & mobiliteit</div>
-      <div style="color:#333;font-size:14px;">Invoer/carte grise (ANTS), CT, garage/devis, tol/Crit’Air.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Carte grise (ANTS) • Contrôle technique</div>
+    <a class="tile card" data-tags="auto ants carte grise controle technique garage devis tol critair"
+       href="./rubriek-auto.html">
+      <h3>Auto & mobiliteit</h3>
+      <div style="color:#333">Invoer/carte grise (ANTS), CT, garage/devis, tol/Crit’Air.</div>
+      <div class="sub">Sub: Carte grise (ANTS) • Contrôle technique</div>
     </a>
 
     <!-- 9 Buren & sociaal -->
-    <a class="card" data-tags="buren sociaal kennismaken bornage erfgrens uitnodigen"
-       href="./rubriek-buren.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Buren & sociaal</div>
-      <div style="color:#333;font-size:14px;">Kennismaken, erfgrenzen, kleine verzoeken, uitnodigen.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Kennismaken • Erfgrens/bornage</div>
+    <a class="tile card" data-tags="buren sociaal kennismaken bornage erfgrens uitnodigen"
+       href="./rubriek-buren.html">
+      <h3>Buren & sociaal</h3>
+      <div style="color:#333">Kennismaken, erfgrenzen, kleine verzoeken, uitnodigen.</div>
+      <div class="sub">Sub: Kennismaken • Erfgrens/bornage</div>
     </a>
 
     <!-- 10 Werk & ondernemen -->
-    <a class="card" data-tags="werk ondernemen sollicitatie cv micro-entreprise urssaf rc pro"
-       href="./rubriek-werk.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Werk & ondernemen</div>
-      <div style="color:#333;font-size:14px;">Sollicitatie, micro-entreprise, B&B/gîtes, facturen/URSSAF.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Sollicitatiegesprek • Micro-entreprise (opstart)</div>
+    <a class="tile card" data-tags="werk ondernemen sollicitatie cv micro-entreprise urssaf rc pro"
+       href="./rubriek-werk.html">
+      <h3>Werk & ondernemen</h3>
+      <div style="color:#333">Sollicitatie, micro-entreprise, B&B/gîtes, facturen/URSSAF.</div>
+      <div class="sub">Sub: Sollicitatiegesprek • Micro-entreprise (opstart)</div>
     </a>
 
     <!-- 11 Klussen -->
-    <a class="card" data-tags="klussen doe-het-zelf bouwmarkt materiaal gereedschap maten lijm kit"
-       href="./rubriek-klussen.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Klussen</div>
-      <div style="color:#333;font-size:14px;">Bouwmarktgesprek, materialen, gereedschap, maten uitleggen.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Bouwmarktgesprek • Materialen & maten</div>
+    <a class="tile card" data-tags="klussen doe-het-zelf bouwmarkt materiaal gereedschap maten lijm kit"
+       href="./rubriek-klussen.html">
+      <h3>Klussen</h3>
+      <div style="color:#333">Bouwmarktgesprek, materialen, gereedschap, maten uitleggen.</div>
+      <div class="sub">Sub: Bouwmarktgesprek • Materialen & maten</div>
     </a>
 
     <!-- 12 Post & goederentransport -->
-    <a class="card" data-tags="post la poste aangetekend lr ar lre colissimo chronopost pakket relais consigne douane cn22 cn23 koerier dhl ups fedex claims"
-       href="./rubriek-post.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Post &amp; goederentransport</div>
-      <div style="color:#333;font-size:14px;">La Poste, aangetekend (LR/AR/LRE), pakketten (Colissimo/Chronopost), afhalen/relais, doorsturen, internationaal/douane, koeriers, claims.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Loket & basis • Aangetekend • Pakketten FR/EU • Afhalen/gemist • Doorsturen • Internationaal • Koeriers • Claims</div>
+    <a class="tile card" data-tags="post la poste aangetekend lr ar lre colissimo chronopost pakket relais consigne douane cn22 cn23 koerier dhl ups fedex claims"
+       href="./rubriek-post.html">
+      <h3>Post &amp; goederentransport</h3>
+      <div style="color:#333">La Poste, aangetekend (LR/AR/LRE), pakketten (Colissimo/Chronopost), afhalen/relais, doorsturen, internationaal/douane, koeriers, claims.</div>
+      <div class="sub">Sub: Loket & basis • Aangetekend • Pakketten FR/EU • Afhalen/gemist • Doorsturen • Internationaal • Koeriers • Claims</div>
     </a>
 
     <!-- 13 Correspondentie (e-mail) -->
-    <a class="card" data-tags="correspondentie email e-mail brief onderwerp bijlage groet formule follow-up"
-       href="./rubriek-correspondentie.html"
-       style="display:block;text-decoration:none;border:1px solid #e8e8e8;border-radius:12px;padding:14px;background:#fff;">
-      <div style="font-weight:700;color:#800000;font-size:18px;margin-bottom:4px;">Correspondentie (e-mail)</div>
-      <div style="color:#333;font-size:14px;">Snel e-mails opstellen: aanspreking, opening, verzoeken, afsluiting, onderwerp/bijlagen, follow-up.</div>
-      <div style="margin-top:8px;font-size:12.5px;color:#666;">Sub: Aanspreking • Openingszinnen • Inhoud & verzoeken • Afsluiten • Onderwerp & bijlagen • Follow-up • Toon • Voorbeeldblokken</div>
+    <a class="tile card" data-tags="correspondentie email e-mail brief onderwerp bijlage groet formule follow-up"
+       href="./rubriek-correspondentie.html">
+      <h3>Correspondentie (e-mail)</h3>
+      <div style="color:#333">Snel e-mails opstellen: aanspreking, opening, verzoeken, afsluiting, onderwerp/bijlagen, follow-up.</div>
+      <div class="sub">Sub: Aanspreking • Openingszinnen • Inhoud & verzoeken • Afsluiten • Onderwerp & bijlagen • Follow-up • Toon • Voorbeeldblokken</div>
+    </a>
+
+    <!-- 14 Op bezoek -->
+    <a class="tile card" data-tags="bezoek uitnodigen diner aperitif tafel vous tu afscheid smalltalk culinaire etiquette"
+       href="./rubriek-op-bezoek.html">
+      <h3>Op bezoek</h3>
+      <div style="color:#333">Uitnodigen, ontvangen, apéritif, aan tafel, smalltalk, vous/tu, bedanken, volgende keer, afscheid.</div>
+      <div class="sub">Sub: Uitnodiging • Welkom • Apéritif • Aan tafel • Conversatie • Vous/Tu • Bedanken • Volgende keer • Afscheid • Culinaire basis • Smalltalk • Etiquette</div>
     </a>
   </section>
 
-  <!-- Woordenlijsten menu -->
-  <section id="lex" aria-label="Woordenlijsten" style="margin-top:16px;border:1px solid #eee;border-radius:12px;padding:12px;background:#fff;">
-    <h2 style="margin:0 0 8px;color:#800000;font-size:18px;">Woordenlijsten (open & downloadbaar)</h2>
-    <p style="margin:0 0 6px;font-size:14px;color:#333;">Openbare NL↔FR lijsten op Nederlanders.fr. Je kunt ze vanuit de browser opslaan/printen.</p>
-    <ul id="lexlist" style="margin:6px 0 0 18px;font-size:14px;line-height:1.6;">
-      <li data-tags="medisch gezondheid apotheek huisarts ordonnance"><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans" target="_blank" rel="noopener" style="color:#800000;">Medische termen (NL↔FR)</a></li>
-      <li data-tags="garage auto controle technique devis"><a href="https://www.nederlanders.fr/profiles/blogs/begrippenlijst-bij-garagebezoek" target="_blank" rel="noopener" style="color:#800000;">Garage / contrôle technique</a></li>
-      <li data-tags="it portalen franceconnect aanmelding wachtwoord"><a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" target="_blank" rel="noopener" style="color:#800000;">IT / portalen / FranceConnect</a></li>
-      <li data-tags="afkortingen administratie mairie dossier"><a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" target="_blank" rel="noopener" style="color:#800000;">Franse afkortingen</a></li>
-      <li data-tags="klussen gereedschap bouwmarkt zagen lijm kit"><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" target="_blank" rel="noopener" style="color:#800000;">Klussen / doe-het-zelf</a></li>
-      <li data-tags="overzicht alle lexicons lijsten"><a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" target="_blank" rel="noopener" style="color:#800000;">Alle lexicons (overzicht)</a></li>
+  <!-- Woordenlijsten band -->
+  <section class="lexband" aria-label="Woordenlijsten">
+    <h2>Woordenlijsten (open & downloadbaar)</h2>
+    <p>Openbare NL↔FR lijsten op Nederlanders.fr. Je kunt ze vanuit de browser opslaan/printen.</p>
+    <ul id="lexlist">
+      <li data-tags="medisch gezondheid apotheek huisarts ordonnance"><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans" target="_blank" rel="noopener">Medische termen (NL↔FR)</a></li>
+      <li data-tags="garage auto controle technique devis"><a href="https://www.nederlanders.fr/profiles/blogs/begrippenlijst-bij-garagebezoek" target="_blank" rel="noopener">Garage / contrôle technique</a></li>
+      <li data-tags="it portalen franceconnect aanmelding wachtwoord"><a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" target="_blank" rel="noopener">IT / portalen / FranceConnect</a></li>
+      <li data-tags="afkortingen administratie mairie dossier"><a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" target="_blank" rel="noopener">Franse afkortingen</a></li>
+      <li data-tags="klussen gereedschap bouwmarkt zagen lijm kit"><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" target="_blank" rel="noopener">Klussen / doe-het-zelf</a></li>
+      <li data-tags="overzicht alle lexicons lijsten"><a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" target="_blank" rel="noopener">Alle lexicons (overzicht)</a></li>
     </ul>
   </section>
 
   <!-- Footer -->
-  <footer style="margin-top:12px;font-size:12.5px;color:#555;">
+  <footer>
     <div><strong>Didactiek:</strong> Doelzinnen • <strong>Taaltips</strong> • Spreekprompts • Micro-lexicon • <strong>Voorbereiden</strong> (5/10/20 min).</div>
-    <div style="margin-top:4px;">CTA’s staan onderaan elke rubriek: 
-      <a href="https://www.nederlanders.fr/page/frantastique-1" style="color:#800000;">Frantastique via NLFR</a> ·
-      <a href="https://www.nederlanders.fr/page/frantastique-1#aimigo" style="color:#800000;">Aïmigo via NLFR</a> ·
-      <a href="https://apprendre.tv5monde.com/" style="color:#800000;">TV5MONDE – Apprendre</a>.
+    <div style="margin-top:4px;">CTA’s staan onderaan elke rubriek:
+      <a href="https://www.nederlanders.fr/page/frantastique-1">Frantastique via NLFR</a> ·
+      <a href="https://www.nederlanders.fr/page/frantastique-1#aimigo">Aïmigo via NLFR</a> ·
+      <a href="https://apprendre.tv5monde.com/">TV5MONDE – Apprendre</a>.
     </div>
-    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
+    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
     <div style="margin-top:4px;">Aanspreekvorm: <strong>vous</strong> (default). “Tu” alleen bij hechte kennissen en na duidelijke uitnodiging.</div>
   </footer>
 </div>
 
 <script>
   function filterCards(){
-    var q = (document.getElementById('q').value || '').toLowerCase().trim();
-    var cards = document.querySelectorAll('.card');
+    var q=(document.getElementById('q').value||'').toLowerCase().trim();
+    var cards=document.querySelectorAll('.card');
     cards.forEach(function(card){
-      var hay = (card.innerText + ' ' + (card.getAttribute('data-tags')||'')).toLowerCase();
-      card.style.display = hay.indexOf(q) > -1 ? 'block' : 'none';
+      var hay=(card.innerText+' '+(card.getAttribute('data-tags')||'')).toLowerCase();
+      card.style.display = hay.indexOf(q)>-1 ? 'block' : 'none';
     });
     // filter woordenlijsten
-    var items = document.querySelectorAll('#lexlist > li');
+    var items=document.querySelectorAll('#lexlist > li');
     items.forEach(function(li){
-      var hay = (li.innerText + ' ' + (li.getAttribute('data-tags')||'')).toLowerCase();
-      li.style.display = hay.indexOf(q) > -1 ? 'list-item' : 'none';
+      var hay=(li.innerText+' '+(li.getAttribute('data-tags')||'')).toLowerCase();
+      li.style.display = hay.indexOf(q)>-1 ? 'list-item' : 'none';
     });
   }
   document.getElementById('q').addEventListener('input', filterCards);
+
+  function showInstallHelp(){
+    var el=document.getElementById('installHelp');
+    el.style.display = (el.style.display==='none'||!el.style.display)?'block':'none';
+    // kleine scroll nudge voor zichtbaarheid
+    if(el.style.display==='block'){ el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  }
 </script>
