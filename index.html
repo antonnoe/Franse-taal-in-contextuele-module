@@ -298,3 +298,10 @@
     btn.textContent = (isAndroid||isIOS) ? 'Op je beginscherm' : 'Op je beginscherm';
   })();
 </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+  }
+</script>
+
+
