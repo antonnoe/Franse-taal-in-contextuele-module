@@ -1,285 +1,530 @@
 <!doctype html><meta charset="utf-8">
 <title>Shopping – NLFR Preflight</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
-  <h1 style="margin:0 0 8px;color:#800000">Shopping (boodschappen & speciaalzaken)</h1>
 
-  <!-- NAV -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
-    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
-    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
-            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
+<style>
+  :root{ --maroon:#800000; }
+  body{margin:0;background:#fff;color:#111;font:14.5px/1.55 Arial,Helvetica,sans-serif}
+  #app{max-width:980px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;background:#fff}
+  h1{margin:0 0 8px;color:var(--maroon)}
+  .navlink{ text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff }
+  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
+  .subbtn.active{border-color:var(--maroon);box-shadow:0 0 0 2px rgba(128,0,0,.12)}
+  .panel{border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0}
+  .panel.alt{background:#fafafa}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .speak-btn{margin-left:8px;padding:2px 6px;font-size:13px;line-height:1;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer}
+  .speak-btn:hover{border-color:var(--maroon)}
+  figure{margin:8px 0 0}
+  figure img{max-width:100%;height:auto;border:1px solid #eee;border-radius:10px}
+  figcaption{font-size:12.5px;color:#555;margin-top:4px}
+</style>
+
+<div id="app">
+  <h1>Shopping (Bakker • Slager • Groente/fruit • Vis • Supermarkt • Kaas • Charcuterie • Drank • Diepvries • Traiteur)</h1>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
+    <a href="./index.html" class="navlink">← Terug naar start</a>
+    <button type="button" class="navlink" onclick="document.getElementById('out').style.display='none'">Reset subrubriek</button>
   </div>
 
-  <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>. <strong>“Vous” is standaard.</strong></p>
+  <p style="margin:0 0 10px">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Micro-lexicon → <strong>Voorbereiden</strong>. 
+    <span style="white-space:nowrap">Aanspreekvorm: <strong>vous</strong> (default).</span></p>
 
-  <!-- SUBRUBRIEKEN ALS KNOPPEN -->
-  <div id="subs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0 12px;">
-    <button class="subbtn" data-key="boulangerie">Bakker (boulangerie)</button>
-    <button class="subbtn" data-key="boucherie">Slager (boucherie)</button>
-    <button class="subbtn" data-key="primeur">Groenteboer (primeur)</button>
-    <button class="subbtn" data-key="poissonnier">Visboer (poissonnier)</button>
-    <button class="subbtn" data-key="volailler">Poelier (volailler)</button>
-    <button class="subbtn" data-key="supermarche">Supermarkt (rayons & retour)</button>
-    <button class="subbtn" data-key="payer">Betalen (cash / chèque / carte)</button>
+  <!-- SUBRUBRIEKEN -->
+  <div id="subs" class="grid" style="margin-bottom:12px">
+    <button class="subbtn" data-key="boulangerie">Boulangerie (Bakker)</button>
+    <button class="subbtn" data-key="boucherie">Boucherie (Slager)</button>
+    <button class="subbtn" data-key="primeur">Primeur (Groenteboer)</button>
+    <button class="subbtn" data-key="poissonnier">Poissonnier (Visboer)</button>
+    <button class="subbtn" data-key="volailler">Volailler (Poelier)</button>
+    <button class="subbtn" data-key="supermarche">Supermarché</button>
+    <button class="subbtn" data-key="fromagerie">Fromagerie (Kaas & zuivel)</button>
+    <button class="subbtn" data-key="charcuterie">Charcuterie (Vleeswaren)</button>
+    <button class="subbtn" data-key="caviste">Caviste (Dranken)</button>
+    <button class="subbtn" data-key="surgeles">Surgelés (Diepvries)</button>
+    <button class="subbtn" data-key="traiteur">Traiteur (Delicatessen)</button>
   </div>
 
-  <!-- Primair: “Toon” (blijft voor muscle-memory) -->
+  <!-- ACTIE -->
   <div style="margin:6px 0 12px;">
-    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
+    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid var(--maroon);background:var(--maroon);color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
     <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
   </div>
 
   <!-- OUTPUT -->
   <div id="out" style="display:none">
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2>
+      <ul id="targets" style="margin:6px 0 0 18px"></ul>
+      <div id="extraMedia"></div>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
-      <div id="extraLinks" style="margin-top:8px;font-size:13px;color:#555;"></div>
+
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2>
+      <ul id="tips" style="margin:6px 0 0 18px"></ul>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
+
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2>
+      <ul id="lex" style="margin:6px 0 0 18px"></ul>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
-      <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
-    </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+
+    <section class="panel alt">
+      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2>
+      <ul id="pre" style="margin:6px 0 0 18px"></ul>
     </section>
   </div>
 
   <footer style="margin-top:8px;font-size:12.5px;color:#555;">
-    Lexicons: <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Nederlanders.fr</a>. “Vous” is default.
-    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
+    Extra: <a href="https://infofrankrijk.com/a-la-boucherie-spreek-de-taal-van-de-franse-slager/" style="color:#800000" target="_blank" rel="noopener">À la boucherie – uitleg</a>
   </footer>
 </div>
 
-<style>
-  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
-  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
-</style>
+<!-- TTS helper (leest “/” als “barre oblique”, haakjes als “entre parenthèses …”) -->
+<script src="./tts.js"></script>
 
 <script>
-(function(){
-  // Openlijke NLFR-lexiconlinks
-  var LEX={tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon"};
+/* ---------- DATA ---------- */
+const DATA = {
+  boulangerie: {
+    targets: [
+      "Une baguette tradition, s’il vous plaît.",
+      "Vous pouvez la couper ? (tranchée)",
+      "Je voudrais un pain complet, bien cuit / pas trop cuit.",
+      "Un pain au chocolat et un croissant au beurre, s’il vous plaît."
+    ],
+    tips: [
+      "‘Baguette tradition’ is ambachtelijk (iets duurder).",
+      "Vraag ‘bien cuite’ (donker) of ‘pas trop cuite’ (lichter).",
+      "‘Tranché’ = gesneden (voor pain de mie of groot brood)."
+    ],
+    lex: [
+      ["baguette (tradition)", "stokbrood (ambachtelijk)"],
+      ["pain de campagne / complet / aux céréales", "boerenbrood / volkoren / meergranen"],
+      ["pain de mie (tranché)", "tostibrood (gesneden)"],
+      ["croissant / croissant au beurre", "croissant / roombotercroissant"],
+      ["pain au chocolat / aux raisins", "chocoladebroodje / koffiebroodje"],
+      ["tarte / tartelette / flan / mille-feuille", "taart / taartje / roomvlaai / tompouce"]
+    ],
+    pre: [
+      "Bedenk: tradition of gewone baguette? Donker of licht gebakken?",
+      "Voor ontbijt: tel broodjes exact (enfants/adultes).",
+      "Speel uitspreek-setje: ‘pas trop cuit’, ‘bien cuit’, ‘tranché’."
+    ]
+  },
 
-  // Contentbank SHOPPING (zelfde inhoudslogica; “Voorbereiden” i.p.v. Pre-flight)
-  var BANK={
-    boulangerie:{
-      targets:[
-        "Bonjour, je voudrais une baguette tradition et deux croissants, s’il vous plaît.",
-        "C’est bien croustillant / pas trop cuit ?",
-        "Je paie par carte / en espèces, merci."
-      ],
-      tips:[
-        "Zeg wat je wilt + hoeveelheid in één zin.",
-        "‘Bien cuit’ = goed door; ‘pas trop cuit’ = niet te donker.",
-        "Vraag totaalbedrag te herhalen als het druk is."
-      ],
-      prompts:[
-        "Bestel 1 tradition + 3 viennoiseries.",
-        "Vraag naar ‘bien/pas trop cuit’.",
-        "Rond beleefd af met ‘Merci, bonne journée.’"
-      ],
-      lex:[
-        ["baguette tradition","traditioneel stokbrood"],["croustillant(e)","knapperig"],["bien/pas trop cuit","goed door/niet te donker"],
-        ["viennoiseries","zoete broodjes"],["par carte/en espèces","met kaart/contant"],["montant","totaalbedrag"]
-      ],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Weet wat je wilt (type + aantal).","Kies betaalwijze (carte/espèces).","Begroet altijd eerst."]
-    },
-    boucherie:{
-      targets:[
-        "Je voudrais 500 grammes de bœuf pour le bourguignon, s’il vous plaît.",
-        "Plutôt maigre, si possible.",
-        "C’est pour quatre personnes."
-      ],
-      tips:[
-        "Noem gerecht (context) → beter advies over stuk en snijden.",
-        "‘Maigre’ = mager; vraag om dunne plakken: ‘tranches fines’.",
-        "Laat portioneren als je wilt invriezen."
-      ],
-      prompts:[
-        "Bestel vlees + gerecht.",
-        "Vraag snijden/portioneren.",
-        "Vraag bewaartips."
-      ],
-      lex:[
-        ["paleron (stoof)","sukade"],["tranches fines","dunne plakken"],["haché","gehakt"],["maigre","mager"],["cuisson","garing"]
-      ],
-      // EXTRA: jouw Infofrankrijk-artikel bij de slager
-      extra:[
-        {label:"Meer over de slager (Infofrankrijk)", url:"https://infofrankrijk.com/a-la-boucherie-spreek-de-taal-van-de-franse-slager/"}
-      ],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Gerecht bepalen (stoof/grill).","Hoeveelheid + aantal personen.","Mag snijden of in porties?"]
-    },
-    primeur:{
-      targets:[
-        "Je voudrais un kilo de tomates et un demi-kilo de carottes.",
-        "Elles sont bien mûres ou plutôt fermes ?",
-        "C’est de la région ?"
-      ],
-      tips:[
-        "Vraag rijpheid (‘mûr/ferme’) afhankelijk van gebruik.",
-        "Check herkomst (‘de la région’) en seizoen (‘de saison’).",
-        "Kijk naar ‘prix au kilo’ op het bordje."
-      ],
-      prompts:[
-        "Bestel 2 soorten + hoeveelheden.",
-        "Vraag rijpheid & herkomst.",
-        "Vraag of iets van het seizoen is."
-      ],
-      lex:[
-        ["mûr(e)/ferme","rijp/stevig"],["de saison","van het seizoen"],["de la région","uit de regio"],["prix au kilo","prijs per kilo"]
-      ],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Bepaal hoeveelheden.","Rijpheid afhankelijk van recept.","Herkomst/seizoen navragen."]
-    },
-    poissonnier:{
-      targets:[
-        "Je voudrais 600 g de filet de saumon, s’il vous plaît.",
-        "Pouvez-vous enlever la peau / les arêtes ?",
-        "C’est pour ce soir."
-      ],
-      tips:[
-        "Zeg ‘filet’ en vraag ontgraten/zonder huid.",
-        "Noem gebruikstijd (vandaag/morgen).",
-        "Vraag bewaaradvies."
-      ],
-      prompts:[
-        "Bestel soort + gewicht.",
-        "Vraag filet/ontgraten.",
-        "Vraag cuisson/bewaren."
-      ],
-      lex:[["filet","filet"],["arêtes","graten"],["peau","huid"],["frais du jour","dagvers"]],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Soort/gewicht kiezen.","Met/zonder huid/graten.","Binnen 24–48 u gebruiken."]
-    },
-    volailler:{
-      targets:[
-        "Je voudrais un poulet fermier d’environ 1,5 kilo.",
-        "Vous pouvez le découper en morceaux ?",
-        "C’est pour rôtir."
-      ],
-      tips:[
-        "‘Fermier/Label Rouge’ = betere kwaliteit.",
-        "Vraag ‘découper’ (in stukken).",
-        "Vraag baktijd/temperatuur."
-      ],
-      prompts:[
-        "Bestel soort + gewicht.",
-        "Vraag découpe.",
-        "Vraag cuissonadvies."
-      ],
-      lex:[["poulet fermier","boerderijkip"],["Label Rouge","kwaliteitslabel"],["découper","in stukken snijden"]],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Weet bereiding (rôtir/stoof).","Gewicht inschatten.","Eventueel in stukken laten snijden."]
-    },
-    supermarche:{
-      targets:[
-        "Excusez-moi, où se trouve le rayon bio / sans gluten ?",
-        "Vous auriez un équivalent / une promotion ?",
-        "Je peux faire un retour pour cet article ?"
-      ],
-      tips:[
-        "Vraag naar specifiek ‘rayon’ (afdeling).",
-        "‘Équivalent’ voor alternatieven.",
-        "Voor retour: ‘ticket de caisse’ nodig."
-      ],
-      prompts:[
-        "Vraag naar het juiste rayon.",
-        "Vraag promo of alternatief.",
-        "Vraag retourtermijn en procedure."
-      ],
-      lex:[
-        ["rayon","afdeling"],["promotion","aanbieding"],["équivalent","gelijkwaardig"],["ticket de caisse","kassabon"],["retour/échange","retour/omruil"]
-      ],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Bon meenemen voor retour.","Weten wat je zoekt (bio/gluten-vrij).","Vraag om alternatief bij ‘out of stock’."]
-    },
-    payer:{
-      targets:[
-        "Je paie par carte / en espèces, s’il vous plaît.",
-        "Vous acceptez les chèques ?",
-        "Vous pouvez répéter le montant ?"
-      ],
-      tips:[
-        "‘Sans contact’ = contactloos.",
-        "Cheque wordt niet overal geaccepteerd.",
-        "Vraag bedrag te herhalen bij rumoer."
-      ],
-      prompts:[
-        "Zeg betaalmethode (carte/espèces/chèque).",
-        "Vraag naar limiet/plafond.",
-        "Vraag bon/reçu."
-      ],
-      lex:[
-        ["carte bancaire / sans contact","betaalpas / contactloos"],["en espèces","contant"],["chèque","cheque"],["plafond","limiet"],["reçu","bon"]
-      ],
-      links:[{label:"Lexicons (overzicht)",url:LEX.tag}],
-      pre:["Kies betaalwijze vooraf.","Check: cheque wel/niet.","Pincode/ID paraat."]
+  boucherie: {
+    targets: [
+      "Je cherche un morceau pour un rôti / un bourguignon.",
+      "Vous pouvez me couper des steaks (environ 200 grammes) ?",
+      "Avez-vous de l’onglet / du rumsteck / du faux-filet ?",
+      "C’est pour combien de personnes ? Pour quatre, s’il vous plaît."
+    ],
+    tips: [
+      "Franse snit ≠ Nederlandse snit; vraag gerust om advies bij bereiding.",
+      "Vraag naar dikte/gewicht per stuk (‘deux cent grammes’).",
+      "Stoof: paleron, macreuse, plat de côtes; steak: faux-filet, rumsteck, onglet."
+    ],
+    lex: [
+      ["Aiguillette baronne", "naaldje / achterschenkelbief"],
+      ["Bavette de aloyau", "bavette (buik)"],
+      ["Bavette de flanchet", "bavette (buik)"],
+      ["Collier de bœuf", "nek"],
+      ["Côte de bœuf", "ribstuk"],
+      ["Entrecôte", "entrecôte / tussenrib / lendebiefstuk"],
+      ["Faux filet / Contre-filet", "lendebiefstuk"],
+      ["Filet de bœuf", "ossenhaas"],
+      ["Flanchet de bœuf", "vang"],
+      ["Gîte / Jarret arrière", "achterschenkel"],
+      ["Gîte à la noix", "deel van de bovenbil"],
+      ["Gros bout de poitrine", "puntborst / brisket"],
+      ["Hampe de bœuf", "skirt steak (middenrif)"],
+      ["Jumeau à bifteck", "jodenhaas / diamanthaas"],
+      ["Macreuse à pot-au-feu", "deel van bloemstuk"],
+      ["Merlan", "platte bil"],
+      ["Mouvant", "spierstuk van de platte bil"],
+      ["Onglet de bœuf", "longhaas (middenrif)"],
+      ["Paleron (macreuse à braiser)", "sukade / schouderpunt"],
+      ["Plat de côtes de bœuf", "klapstuk"],
+      ["Plat de tranche", "spierstuk van de platte bil"],
+      ["Poire", "platte bil"],
+      ["Queue de bœuf", "staart"],
+      ["Rond de gîte", "deel van de bovenbil"],
+      ["Rond de tranche", "spierstuk van de platte bil"],
+      ["Rumsteck", "lendebiefstuk"],
+      ["Tende de tranche", "platte bil"],
+      ["Tendron de bœuf", "middenrif"]
+    ],
+    pre: [
+      "Bedenk bereidingswijze (grillen/stoof) en aantal personen.",
+      "Leer gewichten uitspreken (deux cents / deux cent cinquante grammes).",
+      "Neem receptnaam mee (bourguignon, rôti, braiser)."
+    ],
+    media: {
+      // Zet je illustratie in de repo op ./images/rundvlees.png (of pas dit pad aan)
+      img: "./images/rundvlees.png",
+      caption: "Franse rundvleessnitten – aangeboden door Nederlanders.fr"
     }
-  };
+  },
 
-  // DOM refs
-  var out=document.getElementById('out');
-  var targets=document.getElementById('targets');
-  var tips=document.getElementById('tips');
-  var prompts=document.getElementById('prompts');
-  var lex=document.getElementById('lex');
-  var lexLink=document.getElementById('lexLink');
-  var pre=document.getElementById('pre');
-  var extraLinks=document.getElementById('extraLinks');
-  var selKey=null;
+  primeur: {
+    targets: [
+      "Je voudrais un kilo de tomates et deux concombres.",
+      "C’est de saison ? Vous me conseillez quoi aujourd’hui ?",
+      "Un bouquet de persil et 500 grammes de haricots verts, s’il vous plaît."
+    ],
+    tips: [
+      "Bij kleine hoeveelheden: ‘un peu de’, ‘une poignée de’.",
+      "Seizoensvraag is normaal en gewaardeerd.",
+      "Sommige primeurs wegen voor je; wacht op ‘suivant !’"
+    ],
+    lex: [
+      ["ail / oignon / poireau", "knoflook / ui / prei"],
+      ["artichaut / asperge / aubergine", "artisjok / asperge / aubergine"],
+      ["brocoli / chou / chou-fleur", "broccoli / kool / bloemkool"],
+      ["concombre / courgette", "komkommer / courgette"],
+      ["épinard / haricots verts", "spinazie / sperziebonen"],
+      ["laitue / tomate / radis", "sla / tomaat / radijs"],
+      ["pomme de terre / maïs", "aardappel / maïs"],
+      ["abricot / ananas / avocat", "abrikoos / ananas / avocado"],
+      ["banane / cerise / citron", "banaan / kers / citroen"],
+      ["fraise / framboise / myrtille", "aardbei / framboos / bosbes"],
+      ["orange / pamplemousse", "sinaasappel / grapefruit"],
+      ["pêche / poire / pomme / raisin", "perzik / peer / appel / druif"]
+    ],
+    pre: [
+      "Maak lijstje met kilo/gram streefgewichten.",
+      "Ken seizoensklassiekers (asperge, fraise, tomate).",
+      "Neem boodschappentas mee; veel primeurs gebruiken weinig zakjes."
+    ]
+  },
 
-  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+  poissonnier: {
+    targets: [
+      "Vous pouvez lever les filets, s’il vous plaît ?",
+      "C’est pour faire au four / à la poêle.",
+      "Je prends 500 grammes de crevettes décortiquées."
+    ],
+    tips: [
+      "Vraag om schoonmaken/fileren: ‘vider’, ‘écailler’, ‘lever des filets’.",
+      "Vraag naar graatjes: ‘Il reste des arêtes ?’",
+      "Schaal- en schelpdieren worden per gewicht of stuk verkocht."
+    ],
+    lex: [
+      ["crevettes / homard", "garnalen / kreeft"],
+      ["bigorneaux / huîtres / moules", "alikruiken / oesters / mosselen"],
+      ["coquilles Saint-Jacques", "sint-jakobsschelpen"],
+      ["calmar / poulpe / seiche", "inktvis (pijl) / inktvis (kraak) / zeekat"],
+      ["cabillaud / colin (merlu) / saumon", "kabeljauw / heek / zalm"],
+      ["bar / dorade / maquereau", "zeebaars / goudbrasem / makreel"],
+      ["merlan / hareng / sardines", "wijting / haring / sardientjes"],
+      ["lotte / raie / turbot / sole", "zeeduivel / rog / tarbot / tong"],
+      ["saint-pierre / rouget", "zonnevis / rode mul"],
+      ["truite / carpe / brochet / sandre", "forel / karper / snoek / snoekbaars"]
+    ],
+    pre: [
+      "Kies bereidingswijze (four/poêle) en vraag om filets of vis klaar te maken.",
+      "Neem koeltas/koelelement mee in de zomer.",
+      "Noteer porties per persoon (150–200 g filet/persoon)."
+    ]
+  },
 
-  // Subrubriek-knoppen gedrag
-  Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
-    btn.addEventListener('click', function(){
-      Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), b=>b.classList.remove('active'));
-      this.classList.add('active'); selKey=this.getAttribute('data-key');
-      document.getElementById('selNote').textContent='geselecteerd: '+this.textContent;
+  volailler: {
+    targets: [
+      "Je voudrais un poulet fermier, coupé en morceaux.",
+      "Avez-vous de la pintade / du canard aujourd’hui ?",
+      "Deux cuisses et deux blancs, s’il vous plaît."
+    ],
+    tips: [
+      "Vraag naar type: ‘poulet fermier / label rouge’.",
+      "Snijden op verzoek: ‘en morceaux’ of ‘désossé’.",
+      "Wild (gibier) is seizoensgebonden."
+    ],
+    lex: [
+      ["volaille / gibier", "gevogelte / wild"],
+      ["aile / cuisse / blanc (filet)", "vleugel / poot / borstfilet"],
+      ["poulet / dinde / canard / oie", "kip / kalkoen / eend / gans"],
+      ["pintade / chapon / coq", "parelhoen / kapoen / haan"],
+      ["caille / faisan / perdrix", "kwartel / fazant / patrijs"],
+      ["lapin / lièvre", "konijn / haas"]
+    ],
+    pre: [
+      "Aantal personen en stukken (cuisses/blancs) vooraf bepalen.",
+      "Vraag naar bereidingstip per soort (temps de cuisson).",
+      "Koeltas mee voor rauw gevogelte."
+    ]
+  },
+
+  supermarche: {
+    targets: [
+      "Où puis-je trouver la sauce tomate / la farine ?",
+      "Il y a une carte de fidélité ?",
+      "Je paie par carte / en espèces."
+    ],
+    tips: [
+      "Let op promo’s ‘2 pour 1’, ‘format familial’.",
+      "Non-food zit soms apart (entretien, hygiène).",
+      "Cheque wordt minder gebruikt; kaart of contactloos is standaard."
+    ],
+    lex: [
+      ["pâtes / riz / sauce tomate / moutarde", "pasta / rijst / tomatensaus / mosterd"],
+      ["huile d’olive / vinaigre", "olijfolie / azijn"],
+      ["conserves (légumes/poisson)", "conserven (groente/vis)"],
+      ["soupe / confiture / pâte à tartiner", "soep / jam / zoet broodbeleg"],
+      ["céréales / café / thé / lait (UHT)", "ontbijtgranen / koffie / thee / houdbare melk"],
+      ["jus de fruits / biscuits / chips / chocolat", "sap / koekjes / chips / chocola"],
+      ["farine / sucre / sel / poivre / épices", "bloem / suiker / zout / peper / kruiden"],
+      ["produits d’entretien", "schoonmaakmiddelen"],
+      ["liquide vaisselle / tablettes LV", "afwasmiddel / vaatwastabletten"],
+      ["lessive / adoucissant / eau de Javel", "wasmiddel / wasverzachter / bleek"],
+      ["sacs poubelle / papier toilette / essuie-tout", "vuilniszakken / toiletpapier / keukenpapier"],
+      ["papier alu / film alimentaire", "aluminiumfolie / vershoudfolie"],
+      ["shampoing / gel douche / savon", "shampoo / douchegel / zeep"],
+      ["dentifrice / brosse à dents", "tandpasta / tandenborstel"],
+      ["mouchoirs / couches / protections", "zakdoekjes / luiers / maandverband"],
+      ["piles / ampoules", "batterijen / lampen"]
+    ],
+    pre: [
+      "Maak lijst per gangpad (épicerie salée/sucrée, entretien, hygiène).",
+      "Controleer openingstijden (zondag vaak beperkt).",
+      "Neem tassen mee (sacs réutilisables)."
+    ]
+  },
+
+  fromagerie: {
+    targets: [
+      "Je voudrais un morceau de Comté bien affiné, s’il vous plaît.",
+      "Plutôt pâte molle ou pâte dure ?",
+      "Vous pouvez me faire quelques tranches ?"
+    ],
+    tips: [
+      "‘Affiné’ = rijping; vraag naar maanden (‘12/18 mois’).",
+      "Vraag moedertypen: chèvre (geit), brebis (schaap), vache (koe).",
+      "Geschaafd/gesneden mogelijk: ‘en tranches’ ou ‘râpé’."
+    ],
+    lex: [
+      ["fromage (au lait cru)", "kaas (rauwe melk)"],
+      ["pâte dure / molle / persillée", "hard / zacht / blauw"],
+      ["fromage de chèvre / de brebis", "geiten- / schapenkaas"],
+      ["fromage frais / fromage blanc", "verse kaas / kwark"],
+      ["fromage râpé", "geraspte kaas"],
+      ["une tranche / un morceau", "een plak(je) / een stuk(je)"],
+      ["affiné", "gerijpt"],
+      ["lait entier / demi-écrémé / écrémé", "volle / halfvolle / magere melk"],
+      ["beurre (doux / demi-sel)", "boter (ongezouten / halfgezout)"],
+      ["crème fraîche / crème liquide", "crème fraîche / slagroom"],
+      ["yaourt (nature / aux fruits)", "yoghurt (natuur / met fruit)"],
+      ["œufs", "eieren"]
+    ],
+    pre: [
+      "Bedenk type (chèvre/brebis/vache) en rijping (affinage).",
+      "Een plateau samenstellen? Vraag advies per volgorde milde→sterke.",
+      "Neem koeltas mee in de zomer."
+    ]
+  },
+
+  charcuterie: {
+    targets: [
+      "Je voudrais 200 grammes de jambon blanc, en tranches fines.",
+      "Avez-vous du jambon cru / du saucisson sec ?",
+      "Un peu de rillettes et du pâté de campagne, s’il vous plaît."
+    ],
+    tips: [
+      "Snijdikte: ‘tranches fines/épaisses’.",
+      "Vraag naar streekhammen (Bayonne, Parme).",
+      "Rillettes en pâté zijn smeerbaar/mesbaar; vraag naar bewaartip."
+    ],
+    lex: [
+      ["jambon (blanc/cuit)", "gekookte ham"],
+      ["jambon cru / de pays", "rauwe ham"],
+      ["saucisson (sec) / à l’ail", "droge worst / knoflookworst"],
+      ["pâté (de campagne / de foie)", "paté (boeren- / lever-)"],
+      ["rillettes (porc/canard/poulet)", "rillettes (varken/eend/kip)"],
+      ["lardons / poitrine fumée", "spekblokjes / gerookt buikspek"]
+    ],
+    pre: [
+      "Bepaal gewicht en snijdikte per soort.",
+      "Let op allergenen (lever, noten in pâtés).",
+      "Vraag naar houdbaarheid en bewaartips."
+    ]
+  },
+
+  caviste: {
+    targets: [
+      "Je cherche un vin rouge léger pour le dîner.",
+      "Plutôt sec ou moelleux ?",
+      "Pour l’apéritif: un crémant ou un champagne ?"
+    ],
+    tips: [
+      "Vraag per gerecht (fromage/poisson/viande) om advies.",
+      "Alcoholvrij alternatief: jus, sirop, eau pétillante.",
+      "Koop gekoeld of plan koeltijd."
+    ],
+    lex: [
+      ["eau (plate / gazeuse)", "water (plat / bruis)"],
+      ["jus de fruits / soda / sirop", "sap / frisdrank / siroop"],
+      ["vin (rouge/blanc/rosé)", "wijn (rood/wit/rosé)"],
+      ["sec / doux (moelleux)", "droog / zoet"],
+      ["vin mousseux / crémant / champagne", "mousserend / crémant / champagne"],
+      ["bière (blonde/brune/ambrée/blanche)", "bier (blond/bruin/amber/wit)"],
+      ["cidre (brut/doux) / poiré", "cider (droog/zoet) / perencider"],
+      ["apéritifs: pastis, vermouth, porto, sherry, kir", "aperitieven"],
+      ["spiritueux: whisky, gin, vodka, rhum, tequila", "sterke dranken"],
+      ["cognac / armagnac / calvados", "brandewijnen/digestieven"],
+      ["liqueurs: cassis, cointreau, chartreuse, etc.", "likeuren"]
+    ],
+    pre: [
+      "Weet waarvoor de drank dient (apéro, dessert, vis/vlees).",
+      "Kooptips: vraag budgetband (‘entre 8 et 12 euros’).",
+      "Vraag serveertemperatuur en bewaartip."
+    ]
+  },
+
+  surgeles: {
+    targets: [
+      "Où sont les légumes surgelés ?",
+      "Je prends des frites au four et des épinards en branches.",
+      "Vous avez des filets de cabillaud nature ?"
+    ],
+    tips: [
+      "‘Au four’ = voor de oven (frites/pizza).",
+      "Controleer porties/grammage, vooral bij vis en vlees.",
+      "Let op ‘à réchauffer’ vs. ‘à cuire’."
+    ],
+    lex: [
+      ["haricots verts / petits pois / épinards", "sperziebonen / doperwten / spinazie"],
+      ["brocolis / chou-fleur (fleurettes)", "broccoli / bloemkool (roosjes)"],
+      ["poêlée / julienne (de légumes)", "groentemix / julienne"],
+      ["frites / pommes dauphine / noisette / rissolées", "frites / aardappelsoesjes / nootjes / partjes"],
+      ["steak haché / boulettes / poulet (filets/cuisses)", "hamburger / gehaktballen / kip (filet/poot)"],
+      ["poisson nature / pané / bâtonnets", "vis natuur / gepaneerd / vissticks"],
+      ["crevettes / noix de Saint-Jacques", "garnalen / sint-jakobsvruchtvlees"],
+      ["pizza / quiche / lasagnes / hachis parmentier", "pizza / quiche / lasagne / ovenschotel"],
+      ["pâte feuilletée / brisée", "bladerdeeg / kruimeldeeg"],
+      ["viennoiseries à cuire / pâtisseries", "afbakbroodjes / diepvriesgebak"],
+      ["glace / sorbet / cônes / bâtonnets / glaçons", "roomijs / sorbet / hoorntjes / ijsjes / ijsblokjes"]
+    ],
+    pre: [
+      "Controleer vriescapaciteit thuis; neem koeltas mee.",
+      "Plan oven- of baktijd (au four / à la poêle).",
+      "Lees bereidingspictogrammen; die zijn helder."
+    ]
+  },
+
+  traiteur: {
+    targets: [
+      "Je prends un poulet rôti et un peu de pommes de terre.",
+      "Avez-vous de la salade piémontaise / du céleri rémoulade ?",
+      "Un morceau de quiche lorraine, à réchauffer."
+    ],
+    tips: [
+      "Veel gerechten zijn koud te koop en thuis op te warmen.",
+      "Vraag naar porties per persoon.",
+      "Vraag of saus apart kan."
+    ],
+    lex: [
+      ["salade piémontaise / carottes râpées", "aardappel-ham salade / geraspte wortel"],
+      ["céleri rémoulade / taboulé", "knolselderijsalade / tabouleh"],
+      ["betteraves cuites (en tranches)", "gekookte rode biet (plakjes)"],
+      ["poulet rôti / pommes de terre (grenailles)", "gegrilde kip / krieltjes"],
+      ["gratin dauphinois / brandade (de morue)", "aardappelgratin / kabeljauw-puree ovenschotel"],
+      ["quiche (lorraine) / tarte salée", "quiche (lorraine) / hartige taart"],
+      ["olives / houmous / tzatziki", "olijven / hummus / tzatziki"],
+      ["anchois marinés", "gemarineerde ansjovis"]
+    ],
+    pre: [
+      "Kies koude of warme afname en serveertijd.",
+      "Noteer allergieën van gasten.",
+      "Neem bakjes of tas mee; soms krijg je wegwerp."
+    ]
+  }
+};
+
+/* ---------- RENDER ---------- */
+let selKey=null;
+let targetsEl, tipsEl, lexEl, preEl, outEl, mediaEl;
+
+function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+
+function addSpeakBtn(li, getText){
+  const b=document.createElement('button');
+  b.type='button'; b.className='speak-btn'; b.title='Uitspreken (FR)'; b.textContent='🔊';
+  b.addEventListener('click', e=>{
+    e.stopPropagation();
+    const txt = (typeof getText==='function' ? getText() : li.textContent || '').trim();
+    if(window.tts && txt){ window.tts.speak(txt, {lang:'fr-FR', rate:0.95, pitch:1.08}); }
+  });
+  li.appendChild(b);
+}
+
+function render(key){
+  const d=DATA[key]; if(!d) return;
+  [targetsEl,tipsEl,lexEl,preEl].forEach(clear);
+  mediaEl.innerHTML='';
+
+  d.targets.forEach(x=>{
+    const li=document.createElement('li'); li.textContent=x;
+    addSpeakBtn(li, ()=>x);
+    targetsEl.appendChild(li);
+  });
+
+  d.tips.forEach(x=>{
+    const li=document.createElement('li'); li.textContent=x;
+    tipsEl.appendChild(li);
+  });
+
+  d.lex.forEach(([fr,nl])=>{
+    const li=document.createElement('li'); li.innerHTML='<strong>'+fr+'</strong> – '+nl;
+    addSpeakBtn(li, ()=>fr);
+    lexEl.appendChild(li);
+  });
+
+  d.pre.forEach(x=>{
+    const li=document.createElement('li'); li.textContent=x;
+    preEl.appendChild(li);
+  });
+
+  if (d.media && d.media.img){
+    const fig=document.createElement('figure');
+    const img=document.createElement('img');
+    img.src=d.media.img; img.alt="Rundvleessnitten (FR)";
+    const cap=document.createElement('figcaption'); cap.textContent=d.media.caption||'';
+    fig.appendChild(img); fig.appendChild(cap);
+    mediaEl.appendChild(fig);
+  }
+
+  outEl.style.display='block';
+  window.scrollTo(0, document.getElementById('app').offsetTop);
+}
+
+/* ---------- INIT ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  outEl=document.getElementById('out');
+  targetsEl=document.getElementById('targets');
+  tipsEl=document.getElementById('tips');
+  lexEl=document.getElementById('lex');
+  preEl=document.getElementById('pre');
+  mediaEl=document.getElementById('extraMedia');
+
+  document.querySelectorAll('.subbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.subbtn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      selKey=btn.getAttribute('data-key');
+      const note=document.getElementById('selNote');
+      if(note) note.textContent='geselecteerd: '+btn.textContent;
       render(selKey);
     });
   });
 
-  // “Toon geselecteerde subrubriek” als fallback
-  document.getElementById('go').addEventListener('click', function(){
-    if(!selKey){ document.getElementById('selNote').textContent='(kies eerst een subrubriek)'; return; }
+  document.getElementById('go').addEventListener('click', ()=>{
+    if(!selKey){
+      const note=document.getElementById('selNote');
+      if(note) note.textContent='(kies eerst een subrubriek)';
+      return;
+    }
     render(selKey);
   });
-
-  function render(key){
-    var d=BANK[key]; if(!d) return;
-    [targets,tips,prompts,lex,pre].forEach(clear);
-    // Doelzinnen
-    d.targets.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; targets.appendChild(li); });
-    // Taaltips
-    d.tips.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
-    // Extra bron bij slager
-    if(d.extra){
-      extraLinks.innerHTML = d.extra.map(e=>'<a href="'+e.url+'" style="color:#800000">'+e.label+'</a>').join(' · ');
-    } else {
-      extraLinks.innerHTML = '';
-    }
-    // Spreekprompts
-    d.prompts.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
-    // Micro-lexicon
-    d.lex.forEach(x=>{ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
-    // Lexicon-overzicht
-    var links=(d.links||[]).map(lk=>'<a href="'+lk.url+'" style="color:#800000">'+lk.label+'</a>').join(' · ');
-    lexLink.innerHTML = links;
-    // Voorbereiden
-    d.pre.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
-
-    out.style.display='block';
-    window.scrollTo(0, document.getElementById('app').offsetTop);
-  }
-})();
+});
 </script>
