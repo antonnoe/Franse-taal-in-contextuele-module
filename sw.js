@@ -1,14 +1,21 @@
-// sw.js — "soft" runtime caching (geen vaste precache-lijst)
-// Cachet wat de gebruiker bezoekt (HTML/PNG/JS/CSS), met network-first voor HTML.
+// sw.js — NLFR PWA "soft caching"
+// - Network-first voor HTML (navigatie) met cachefallback
+// - Cache-first + stille verversing voor statics (CSS/JS/PNG/SVG/etc.)
 
-const CACHE = "nlfr-soft-v1";
+const CACHE = "nlfr-v1";
 
-self.addEventListener("install", (e) => {
+// Hulp: bepaal of request HTML/navigatie is
+function isHTML(req) {
+  const accept = req.headers.get("accept") || "";
+  return req.mode === "navigate" || accept.includes("text/html");
+}
+
+self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.map(k => (k === CACHE ? null : caches.delete(k))))
     )
@@ -16,33 +23,39 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-// Network-first voor HTML; Cache-first voor statics
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
-  // Alleen GET en zelfde origin
+
+  // Alleen GET + same-origin
   if (req.method !== "GET" || url.origin !== location.origin) return;
 
-  const isHTML = req.headers.get("accept")?.includes("text/html");
-  if (isHTML) {
+  // HTML: network-first
+  if (isHTML(req)) {
     event.respondWith(
       fetch(req).then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(req, copy));
         return res;
-      }).catch(() => caches.match(req))
+      }).catch(async () => {
+        // fallback: cache-hit of laatste index.html
+        const hit = await caches.match(req);
+        if (hit) return hit;
+        return caches.match("/Franse-taal-in-contextuele-module/index.html");
+      })
     );
     return;
   }
 
-  // Statics: cache-first, daarna netwerk
+  // Statics: cache-first, daarna netwerk + stille update
   event.respondWith(
-    caches.match(req).then(hit =>
-      hit || fetch(req).then(res => {
+    caches.match(req).then(hit => {
+      const fetchAndCache = fetch(req).then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(req, copy));
         return res;
-      })
-    )
+      });
+      return hit || fetchAndCache;
+    })
   );
 });
