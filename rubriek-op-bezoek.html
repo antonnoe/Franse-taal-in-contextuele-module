@@ -1,14 +1,34 @@
 <!doctype html><meta charset="utf-8">
 <title>Op bezoek – NLFR Preflight</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
-  <h1 style="margin:0 0 8px;color:#800000">Op bezoek (uitnodigen & ontvangen)</h1>
+
+<!-- Basisstijl -->
+<style>
+  :root{ --maroon:#800000; }
+  body{margin:0;background:#fff;color:#111;font:14.5px/1.55 Arial,Helvetica,sans-serif}
+  #app{max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;background:#fff}
+  h1{margin:0 0 8px;color:var(--maroon)}
+  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
+  .subbtn.active{border-color:var(--maroon);box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
+  .navlink{ text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff }
+  .panel{border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;}
+  .panel.alt{background:#fafafa;}
+  /* 🔊 TTS button */
+  .speak-btn{
+    margin-left:8px; padding:2px 6px; font-size:13px; line-height:1;
+    border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer;
+  }
+  .speak-btn:hover{ border-color:var(--maroon) }
+</style>
+
+<div id="app">
+  <h1>Op bezoek (uitnodigen & ontvangen)</h1>
 
   <!-- NAV -->
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
-    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
+    <a href="./index.html" class="navlink">← Terug naar start</a>
     <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
-            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
+            class="navlink" style="border-color:#111">Reset subrubriek</button>
   </div>
 
   <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>.
@@ -25,7 +45,7 @@
     <button class="subbtn" data-key="thanks">7) Bedanken bij vertrek</button>
     <button class="subbtn" data-key="next">8) Volgende afspraak</button>
     <button class="subbtn" data-key="goodbye">9) Afscheid nemen</button>
-    <!-- NIEUW -->
+    <!-- Extra rubrieken -->
     <button class="subbtn" data-key="culinaire">Culinaire basis (lexicon)</button>
     <button class="subbtn" data-key="smalltalk">Smalltalk & gespreksstarters</button>
     <button class="subbtn" data-key="etiquette">Voorbereiding NL→FR (etiquette)</button>
@@ -33,27 +53,32 @@
 
   <!-- Primair: “Toon” -->
   <div style="margin:6px 0 12px;">
-    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
+    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid var(--maroon);background:var(--maroon);color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
     <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
   </div>
 
   <!-- OUTPUT -->
   <div id="out" style="display:none">
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2>
+      <ul id="targets" style="margin:6px 0 0 18px;"></ul>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2>
+      <ul id="tips" style="margin:6px 0 0 18px;"></ul>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2>
+      <ol id="prompts" style="margin:6px 0 0 18px;"></ol>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
+    <section class="panel">
+      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2>
+      <ul id="lex" style="margin:6px 0 0 18px;"></ul>
       <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
     </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
+    <section class="panel alt">
+      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2>
+      <ul id="pre" style="margin:6px 0 0 18px;"></ul>
     </section>
   </div>
 
@@ -66,403 +91,496 @@
   </footer>
 </div>
 
-<style>
-  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
-  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
-</style>
+<!-- 1) Laad de gedeelde TTS helper (als je tts.js hebt toegevoegd aan de root) -->
+<script src="./tts.js"></script>
 
+<!-- 2) Inline fallback & “female”-preset (iets hogere pitch) + render-logic met 🔊 -->
 <script>
+/* ===== Minimalistische fallback als tts.js niet bestaat ===== */
 (function(){
-  var LEX={
-    tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon",
-    afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
-    it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen"
-  };
-
-  var BANK={
-    invite:{
-      targets:[
-        "J’aimerais vous inviter à dîner.",
-        "Voulez-vous venir dîner chez nous samedi ?",
-        "Accepteriez-vous notre invitation à…",
-        "Tu veux venir manger à la maison ? (informeel)"
-      ],
-      tips:[
-        "Datum + uur meteen meegeven; ‘vous’ standaard, ‘tu’ alleen bij vrienden/familie.",
-        "Voorstel met conditionnel klinkt beleefd: *Accepteriez-vous…*",
-        "Bij meerdere gasten: *Est-ce que cela vous conviendrait ?*"
-      ],
-      prompts:[
-        "Noem datum/uur en locatie (adres/stad).",
-        "Vraag naar dieetwensen of allergieën.",
-        "Bevestig aantal personen en eventueel kinderen."
-      ],
-      lex:[
-        ["invitation","uitnodiging"],
-        ["dîner / déjeuner","diner / lunch"],
-        ["convient / convenir","schikken / uitkomen"],
-        ["apporter","meebrengen (bijv. dessert)"]
-      ],
-      links:[{label:"Afkortingen",url:LEX.afk}],
-      pre:[
-        "Agenda checken en 2 alternatieve data klaar hebben.",
-        "Contactgegevens en route delen indien nodig.",
-        "Eventueel ‘dresscode’ of informeel karakter vermelden."
-      ]
-    },
-
-    welcome:{
-      targets:[
-        "Bienvenue !",
-        "Entrez, je vous en prie.",
-        "Je peux prendre votre manteau / vos affaires ?",
-        "Mettez-vous à l’aise.",
-        "Vous avez fait bonne route ?"
-      ],
-      tips:[
-        "‘Je vous en prie’ = beleefde invitatie, sterker dan ‘s’il vous plaît’.",
-        "Korte, vriendelijke zinnen; glimlach en gebaar doen de rest.",
-        "Gebruik ‘vous’ tot men duidelijk informeel wordt."
-      ],
-      prompts:[
-        "Bied jas-opname en zitplaats aan.",
-        "Vraag of men iets wil drinken.",
-        "Informeer kort naar de reis/route."
-      ],
-      lex:[
-        ["à l’aise","op het gemak"],
-        ["faire bonne route","een goede reis hebben"],
-        ["affaires / manteau","spullen / jas"]
-      ],
-      links:[],
-      pre:[
-        "Kapstok vrij, glaswerk klaar, eerste drankje koud/warm.",
-        "Toilet aanwijzen indien nodig.",
-        "Eventuele huisregels kort benoemen (huisdieren, rookbeleid)."
-      ]
-    },
-
-    aperitif:{
-      targets:[
-        "Qu’est-ce que je vous sers (à boire) ?",
-        "Vous prenez / Voulez-vous un apéritif ?",
-        "J’ai du vin, de la bière, ou un jus de fruit.",
-        "Tu veux boire quelque chose ? (informeel)"
-      ],
-      tips:[
-        "‘Apéritif’ is vóór het eten; vaak klein hapje erbij.",
-        "‘Vous prenez… ?’ is een indirecte, zachte vraagvorm.",
-        "Noem 2–3 opties; vermijd te lange lijsten."
-      ],
-      prompts:[
-        "Bied 2–3 drankopties + 1 alcoholvrij.",
-        "Vraag naar voorkeur (vin/bière/jus).",
-        "Bied klein hapje (olives, chips, fromage)."
-      ],
-      lex:[
-        ["apéritif (apéro)","drankje vooraf"],
-        ["servir","inschenken/opscheppen"],
-        ["sans alcool","alcoholvrij"]
-      ],
-      links:[],
-      pre:[
-        "Glazen/drank klaarzetten; openers en ijs.",
-        "Klein hapje voorbereiden.",
-        "Check dieet/halal/kosjer/geen alcohol."
-      ]
-    },
-
-    table:{
-      targets:[
-        "On va passer à table.",
-        "Si vous voulez bien, on peut passer à table.",
-        "Asseyez-vous, je vous en prie.",
-        "Installez-vous !"
-      ],
-      tips:[
-        "‘Si vous voulez bien’ is beleefd en zacht.",
-        "Zitplaatsen verdelen (kinderen/oudere gasten).",
-        "Eventueel ‘plan de table’ bij grotere groep."
-      ],
-      prompts:[
-        "Kondig aan dat je naar tafel gaat.",
-        "Wijs plaatsen aan (ouders/kinderen).",
-        "Bied water/brood aan als start."
-      ],
-      lex:[
-        ["passer à table","aan tafel gaan"],
-        ["asseyez-vous / installez-vous","gaat u zitten / neem plaats"],
-        ["plan de table","tafelopstelling"]
-      ],
-      links:[],
-      pre:[
-        "Tafel gedekt; water en brood klaar.",
-        "Serveervolgorde en timing in gedachten.",
-        "Eventuele kinderstoelen bestemd."
-      ]
-    },
-
-    conversation:{
-      targets:[
-        "Santé ! / À la vôtre !",
-        "Servez-vous, s’il vous plaît.",
-        "Voulez-vous encore un peu de… ?",
-        "Ça vous plaît ?",
-        "Tu te ressers ? (informeel)"
-      ],
-      tips:[
-        "Proost: ‘À la vôtre’ (u/jullie) vs. ‘À la tienne’ (tu).",
-        "‘Servez-vous’ = bedien u/jullie zelf (vriendelijk).",
-        "Vermijd te direct evalueren; ‘Ça vous plaît ?’ is zacht."
-      ],
-      prompts:[
-        "Proostmoment begeleiden.",
-        "Vraag of iemand nog wil opscheppen.",
-        "Pols discreet of het smaakt."
-      ],
-      lex:[
-        ["santé / à la vôtre","proost"],
-        ["se resservir","nogmaals opscheppen"],
-        ["goûter / plaire","proeven / bevallen (smaken)"]
-      ],
-      links:[],
-      pre:[
-        "Karaf water bijvullen; extra bestek/servetten.",
-        "Duidelijke schaal- en lepelpositie.",
-        "Allergieinfo van gerechten paraat."
-      ]
-    },
-
-    forms:{
-      targets:[
-        "Vous = standaard beleefdheid.",
-        "Tu alleen voor vrienden/familie/kinderen.",
-        "On peut se tutoyer ? (Kunnen we tutoyeren?)"
-      ],
-      tips:[
-        "Bij twijfel: blijf bij **vous**.",
-        "De overstap expliciet en vriendelijk aanbieden.",
-        "Groep volwassenen: meestal vous-vorm."
-      ],
-      prompts:[
-        "Bepaal per gast het register (vous/tu).",
-        "Houd consequent dezelfde vorm aan.",
-        "Vraag expliciet als je wil switchen naar ‘tu’."
-      ],
-      lex:[
-        ["vouvoiement / tutoiement","u-vorm / jij-vorm"],
-        ["registre","toon/register"],
-        ["proximité","nabijheid/vertrouwdheid"]
-      ],
-      links:[],
-      pre:[
-        "Bespreek met mede-gastheer/-vrouw welk register je hanteert.",
-        "Leer namen correct uitspreken.",
-        "Houd het beleefd; ‘vous’ schaadt nooit."
-      ]
-    },
-
-    thanks:{
-      targets:[
-        "Merci d’être venu(e/s).",
-        "J’étais ravi(e) de vous voir.",
-        "J’espère que vous avez passé une bonne soirée."
-      ],
-      tips:[
-        "Zet eventueel een vervolgstap: ‘On se revoit bientôt’.",
-        "Ravi(e) aanpassen aan je eigen geslacht.",
-        "Voeg korte persoonlijke noot toe (bedankje voor meegebracht item)."
-      ],
-      prompts:[
-        "Bedank bij deur/poort.",
-        "Vraag of iedereen goed thuis komt (transport).",
-        "Evt. restjes meegeven/afspraken delen."
-      ],
-      lex:[
-        ["ravi(e)","blij/verguld"],
-        ["soirée","avond(je)"],
-        ["bien rentré(e/s)","goed thuisgekomen"]
-      ],
-      links:[],
-      pre:[
-        "Jassen en spullen klaarleggen.",
-        "Eventueel taxi/rit delen/ov-info bij de hand.",
-        "Afval/restjes efficiënt opruimen/verdelen."
-      ]
-    },
-
-    next:{
-      targets:[
-        "Il faut qu’on refasse ça.",
-        "On se revoit bientôt, j’espère.",
-        "La prochaine fois, c’est chez nous !"
-      ],
-      tips:[
-        "Licht en vriendelijk; geen druk.",
-        "Eventueel een ruwe termijn voorstellen (‘en juin’).",
-        "Laat ruimte voor agenda’s."
-      ],
-      prompts:[
-        "Stel vrijblijvend volgende keer voor.",
-        "Check globale beschikbaarheid (maand/periode).",
-        "Noteer 1 follow-up kanaal (sms/mail)."
-      ],
-      lex:[
-        ["prochaine fois","volgende keer"],
-        ["bientôt","binnenkort"],
-        ["se revoir","elkaar terugzien"]
-      ],
-      links:[],
-      pre:[
-        "Agenda/telefoon bij de hand.",
-        "1–2 ruwe periodes klaar.",
-        "Contactkanaal bevestigen."
-      ]
-    },
-
-    goodbye:{
-      targets:[
-        "Au revoir !",
-        "Bonne soirée !",
-        "Rentrez bien.",
-        "Salut ! (informeel)"
-      ],
-      tips:[
-        "‘Rentrez bien’ = vriendelijke wens voor veilige thuiskomst.",
-        "Bij informeel: ‘Salut !’ prima.",
-        "Hou het kort bij de deur (geen lange herstart)."
-      ],
-      prompts:[
-        "Wens fijne avond en veilige rit.",
-        "Bevestig dat alles is meegenomen (jas/telefoon).",
-        "Sluit af met glimlach en korte groet."
-      ],
-      lex:[
-        ["au revoir / salut","tot ziens / doei"],
-        ["bonne soirée","fijne avond"],
-        ["rentrer","thuiskomen"]
-      ],
-      links:[],
-      pre:[
-        "Controleer jassen/tassen/telefoons.",
-        "Licht aan buiten indien donker.",
-        "Houd deur/poort vrij."
-      ]
-    },
-
-    /* --- NIEUW: culinaire basis --- */
-    culinaire:{
-      targets:[
-        "Je vous sers l’entrée / le plat / le dessert.",
-        "Vous préférez de l’eau plate ou gazeuse ?",
-        "Il y a des allergies ou des préférences ?"
-      ],
-      tips:[
-        "Klassieke volgorde: entrée → plat → fromage (optioneel) → dessert → café/digestif.",
-        "Water op tafel: *carafe d’eau* is gebruikelijk en gratis.",
-        "Meld allergieën discreet vóór aanvang."
-      ],
-      prompts:[
-        "Vraag water/ wijnvoorkeuren (rouge/blanc/rosé).",
-        "Leg kort uit wat elk gerecht is.",
-        "Controleer of iemand vegetarisch/halal/glutenvrij eet."
-      ],
-      lex:[
-        ["entrée / plat / dessert","voorgerecht / hoofdgerecht / nagerecht"],
-        ["fromage / charcuterie","kaas / vleeswaren"],
-        ["carafe d’eau / gazeuse","karaf water / bruis"],
-        ["pain / panier à pain","brood / broodmand"],
-        ["couverts / assiette / verre","bestek / bord / glas"],
-        ["serviette","servet"],
-        ["allergie / intolérance","allergie / intolerantie"],
-        ["végétarien(ne) / sans porc","vegetarisch / zonder varkensvlees"],
-        ["digestif","sterke drank na het eten"]
-      ],
-      links:[],
-      pre:[
-        "Zet water en brood klaar; check glazen per drank.",
-        "Lijst ingrediënten bij de hand voor vragen.",
-        "Evt. kindergerecht of mild alternatief paraat."
-      ]
-    },
-
-    /* --- NIEUW: smalltalk & starters --- */
-    smalltalk:{
-      targets:[
-        "Vous habitez ici depuis longtemps ?",
-        "Vous êtes de la région ?",
-        "Vous avez des enfants / des animaux ?",
-        "Qu’est-ce que vous aimez faire le week-end ?",
-        "Pourquoi avez-vous choisi de vivre en France ?"
-      ],
-      tips:[
-        "Veilige onderwerpen: woonplaats, regio, weer, tuin, renovatie, markten, sport, cultuur.",
-        "Vermijd (zeker in het begin): politiek, geld, te persoonlijke zaken.",
-        "Antwoorden kort en positief; stel daarna een terugvraag."
-      ],
-      prompts:[
-        "Maak 1 zin over jezelf: vanwaar, sinds wanneer, waarom Frankrijk.",
-        "Bereid 3 vragen voor: ‘région’, ‘famille/animaux’, ‘loisirs’.",
-        "Gebruik bevestigende tussenwerpsels: *Ah oui ? C’est sympa.*"
-      ],
-      lex:[
-        ["depuis / depuis quand","sinds / sinds wanneer"],
-        ["région / village","regio / dorp"],
-        ["enfants / animaux (chien/chat)","kinderen / huisdieren"],
-        ["travaux / rénovation","kluswerk / renovatie"],
-        ["jardin / potager / piscine","tuin / moestuin / zwembad"],
-        ["métier / à la retraite","beroep / met pensioen"],
-        ["loisirs / passe-temps","hobby’s / vrijetijd"]
-      ],
-      links:[],
-      pre:[
-        "Mini-pitch oefenen: ‘Je viens de… J’habite ici depuis… Parce que…’.",
-        "Bedenk 1 vraag per gast (naam onthouden!).",
-        "Weerbericht/regio-feitje paraat (markt, evenement)."
-      ]
-    },
-
-    /* --- NIEUW: voorbereiding NL→FR --- */
-    etiquette:{
-      targets:[
-        "Nous arriverons vers [heure]. Est-ce que cela vous convient ?",
-        "Nous apporterons quelque chose (dessert/vin), si cela vous fait plaisir.",
-        "Merci pour l’invitation, nous confirmons notre venue."
-      ],
-      tips:[
-        "Aankomst: streef naar **op tijd** of een paar minuten speling (geen 15+ min te laat).",
-        "Cadeau: iets kleins (dessert, wijn, bloemen) is gebruikelijk; vermeld het luchtig.",
-        "Groet: handdruk of 1–2 *bises* afhankelijk van context; wacht het initiatief af."
-      ],
-      prompts:[
-        "Stuur een korte bevestiging met tijdstip en eventuele dieetinfo.",
-        "Bedenk 1 klein meebrengcadeau en kondig dat netjes aan.",
-        "Oefen je telefoonnummer in FR (vijf tweetallen) voor praktische afstemming."
-      ],
-      lex:[
-        ["à l’heure / en retard","op tijd / te laat"],
-        ["petite attention","klein presentje/aandacht"],
-        ["bises / poignée de main","zoen(tjes) / handdruk"],
-        ["RSVP / confirmation","graag reageren / bevestiging"],
-        ["tenue / décontracté(e)","kleding / informeel"]
-      ],
-      links:[{label:"Afkortingen",url:LEX.afk}],
-      pre:[
-        "Bevestig tijd, adres en parkeermogelijkheden.",
-        "Neem iets kleins mee (check allergieën).",
-        "Zet je navigatie op het juiste adres; check bereik."
-      ]
+  if(window.tts) return; // we hebben al tts.js
+  window.tts = (function(){
+    let cachedVoice=null;
+    function pickFrenchVoice(){
+      const vs = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      // Heuristiek: Franse stemmen, liefst Google of namen die vrouwelijk klinken
+      const prefer = v =>
+        /fr[-_]FR/i.test(v.lang) ||
+        (/^fr/i.test(v.lang) && /(Google|Am[eé]lie|Aur[ée]lie|Virginie|Marie|Helene|Chantal|Julie|Sophie|F[ée]minine)/i.test(v.name));
+      const frVoices = vs.filter(v => /^fr/i.test(v.lang));
+      return frVoices.find(prefer) || frVoices[0] || vs[0] || null;
     }
-  };
+    if('speechSynthesis' in window){
+      window.speechSynthesis.onvoiceschanged = function(){ cachedVoice = pickFrenchVoice(); };
+      cachedVoice = pickFrenchVoice();
+    }
+    function speak(text, opts){
+      if(!('speechSynthesis' in window)){ alert('Spreken niet ondersteund door deze browser.'); return; }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang   = (opts && opts.lang)   || 'fr-FR';
+      u.rate   = (opts && opts.rate)   || 0.95;
+      u.pitch  = (opts && opts.pitch)  || 1.07;   // female-ish
+      u.volume = (opts && opts.volume) || 1.0;
+      u.voice  = cachedVoice || pickFrenchVoice();
+      window.speechSynthesis.speak(u);
+    }
+    return { speak };
+  })();
+})();
 
-  // ----- UI wiring -----
-  var selKey=null;
-  var out=document.getElementById('out');
-  var targets=document.getElementById('targets'), tips=document.getElementById('tips'),
-      prompts=document.getElementById('prompts'), lex=document.getElementById('lex'),
-      pre=document.getElementById('pre'), lexLink=document.getElementById('lexLink');
+/* ===== Data (inhoud) ===== */
+var LEX={
+  tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon",
+  afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
+  it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen"
+};
 
-  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+var BANK={
+  invite:{
+    targets:[
+      "J’aimerais vous inviter à dîner.",
+      "Voulez-vous venir dîner chez nous samedi ?",
+      "Accepteriez-vous notre invitation à…",
+      "Tu veux venir manger à la maison ? (informeel)"
+    ],
+    tips:[
+      "Datum + uur meteen meegeven; ‘vous’ standaard, ‘tu’ alleen bij vrienden/familie.",
+      "Voorstel met conditionnel klinkt beleefd: Accepteriez-vous…",
+      "Bij meerdere gasten: Est-ce que cela vous conviendrait ?"
+    ],
+    prompts:[
+      "Noem datum/uur en locatie (adres/stad).",
+      "Vraag naar dieetwensen of allergieën.",
+      "Bevestig aantal personen en eventueel kinderen."
+    ],
+    lex:[
+      ["invitation","uitnodiging"],
+      ["dîner / déjeuner","diner / lunch"],
+      ["convient / convenir","schikken / uitkomen"],
+      ["apporter","meebrengen (bijv. dessert)"]
+    ],
+    links:[{label:"Afkortingen",url:LEX.afk}],
+    pre:[
+      "Agenda checken en 2 alternatieve data klaar hebben.",
+      "Contactgegevens en route delen indien nodig.",
+      "Eventueel ‘dresscode’ of informeel karakter vermelden."
+    ]
+  },
+
+  welcome:{
+    targets:[
+      "Bienvenue !",
+      "Entrez, je vous en prie.",
+      "Je peux prendre votre manteau / vos affaires ?",
+      "Mettez-vous à l’aise.",
+      "Vous avez fait bonne route ?"
+    ],
+    tips:[
+      "‘Je vous en prie’ = beleefde invitatie, sterker dan ‘s’il vous plaît’.",
+      "Korte, vriendelijke zinnen; glimlach en gebaar doen de rest.",
+      "Gebruik ‘vous’ tot men duidelijk informeel wordt."
+    ],
+    prompts:[
+      "Bied jas-opname en zitplaats aan.",
+      "Vraag of men iets wil drinken.",
+      "Informeer kort naar de reis/route."
+    ],
+    lex:[
+      ["à l’aise","op het gemak"],
+      ["faire bonne route","een goede reis hebben"],
+      ["affaires / manteau","spullen / jas"]
+    ],
+    links:[],
+    pre:[
+      "Kapstok vrij, glaswerk klaar, eerste drankje koud/warm.",
+      "Toilet aanwijzen indien nodig.",
+      "Eventuele huisregels kort benoemen (huisdieren, rookbeleid)."
+    ]
+  },
+
+  aperitif:{
+    targets:[
+      "Qu’est-ce que je vous sers (à boire) ?",
+      "Vous prenez / Voulez-vous un apéritif ?",
+      "J’ai du vin, de la bière, ou un jus de fruit.",
+      "Tu veux boire quelque chose ? (informeel)"
+    ],
+    tips:[
+      "‘Apéritif’ is vóór het eten; vaak klein hapje erbij.",
+      "‘Vous prenez… ?’ is een indirecte, zachte vraagvorm.",
+      "Noem 2–3 opties; vermijd te lange lijsten."
+    ],
+    prompts:[
+      "Bied 2–3 drankopties + 1 alcoholvrij.",
+      "Vraag naar voorkeur (vin/bière/jus).",
+      "Bied klein hapje (olives, chips, fromage)."
+    ],
+    lex:[
+      ["apéritif (apéro)","drankje vooraf"],
+      ["servir","inschenken/opscheppen"],
+      ["sans alcool","alcoholvrij"]
+    ],
+    links:[],
+    pre:[
+      "Glazen/drank klaarzetten; openers en ijs.",
+      "Klein hapje voorbereiden.",
+      "Check dieet/halal/kosjer/geen alcohol."
+    ]
+  },
+
+  table:{
+    targets:[
+      "On va passer à table.",
+      "Si vous voulez bien, on peut passer à table.",
+      "Asseyez-vous, je vous en prie.",
+      "Installez-vous !"
+    ],
+    tips:[
+      "‘Si vous voulez bien’ is beleefd en zacht.",
+      "Zitplaatsen verdelen (kinderen/oudere gasten).",
+      "Eventueel ‘plan de table’ bij grotere groep."
+    ],
+    prompts:[
+      "Kondig aan dat je naar tafel gaat.",
+      "Wijs plaatsen aan (ouders/kinderen).",
+      "Bied water/brood aan als start."
+    ],
+    lex:[
+      ["passer à table","aan tafel gaan"],
+      ["asseyez-vous / installez-vous","gaat u zitten / neem plaats"],
+      ["plan de table","tafelopstelling"]
+    ],
+    links:[],
+    pre:[
+      "Tafel gedekt; water en brood klaar.",
+      "Serveervolgorde en timing in gedachten.",
+      "Eventuele kinderstoelen bestemd."
+    ]
+  },
+
+  conversation:{
+    targets:[
+      "Santé ! / À la vôtre !",
+      "Servez-vous, s’il vous plaît.",
+      "Voulez-vous encore un peu de… ?",
+      "Ça vous plaît ?",
+      "Tu te ressers ? (informeel)"
+    ],
+    tips:[
+      "Proost: ‘À la vôtre’ (u/jullie) vs. ‘À la tienne’ (tu).",
+      "‘Servez-vous’ = bedien u/jullie zelf (vriendelijk).",
+      "Vermijd te direct evalueren; ‘Ça vous plaît ?’ is zacht."
+    ],
+    prompts:[
+      "Proostmoment begeleiden.",
+      "Vraag of iemand nog wil opscheppen.",
+      "Pols discreet of het smaakt."
+    ],
+    lex:[
+      ["santé / à la vôtre","proost"],
+      ["se resservir","nogmaals opscheppen"],
+      ["goûter / plaire","proeven / bevallen (smaken)"]
+    ],
+    links:[],
+    pre:[
+      "Karaf water bijvullen; extra bestek/servetten.",
+      "Duidelijke schaal- en lepelpositie.",
+      "Allergieinfo van gerechten paraat."
+    ]
+  },
+
+  forms:{
+    targets:[
+      "Vous = standaard beleefdheid.",
+      "Tu alleen voor vrienden/familie/kinderen.",
+      "On peut se tutoyer ? (Kunnen we tutoyeren?)"
+    ],
+    tips:[
+      "Bij twijfel: blijf bij vous.",
+      "De overstap expliciet en vriendelijk aanbieden.",
+      "Groep volwassenen: meestal vous-vorm."
+    ],
+    prompts:[
+      "Bepaal per gast het register (vous/tu).",
+      "Houd consequent dezelfde vorm aan.",
+      "Vraag expliciet als je wil switchen naar ‘tu’."
+    ],
+    lex:[
+      ["vouvoiement / tutoiement","u-vorm / jij-vorm"],
+      ["registre","toon/register"],
+      ["proximité","nabijheid/vertrouwdheid"]
+    ],
+    links:[],
+    pre:[
+      "Bespreek met mede-gastheer/-vrouw welk register je hanteert.",
+      "Leer namen correct uitspreken.",
+      "Houd het beleefd; ‘vous’ schaadt nooit."
+    ]
+  },
+
+  thanks:{
+    targets:[
+      "Merci d’être venu(e/s).",
+      "J’étais ravi(e) de vous voir.",
+      "J’espère que vous avez passé une bonne soirée."
+    ],
+    tips:[
+      "Zet eventueel een vervolgstap: ‘On se revoit bientôt’.",
+      "Ravi(e) aanpassen aan je eigen geslacht.",
+      "Voeg korte persoonlijke noot toe (bedankje voor meegebracht item)."
+    ],
+    prompts:[
+      "Bedank bij deur/poort.",
+      "Vraag of iedereen goed thuis komt (transport).",
+      "Evt. restjes meegeven/afspraken delen."
+    ],
+    lex:[
+      ["ravi(e)","blij/verguld"],
+      ["soirée","avond(je)"],
+      ["bien rentré(e/s)","goed thuisgekomen"]
+    ],
+    links:[],
+    pre:[
+      "Jassen en spullen klaarleggen.",
+      "Eventueel taxi/rit delen/ov-info bij de hand.",
+      "Afval/restjes efficiënt opruimen/verdelen."
+    ]
+  },
+
+  next:{
+    targets:[
+      "Il faut qu’on refasse ça.",
+      "On se revoit bientôt, j’espère.",
+      "La prochaine fois, c’est chez nous !"
+    ],
+    tips:[
+      "Licht en vriendelijk; geen druk.",
+      "Eventueel een ruwe termijn voorstellen (‘en juin’).",
+      "Laat ruimte voor agenda’s."
+    ],
+    prompts:[
+      "Stel vrijblijvend volgende keer voor.",
+      "Check globale beschikbaarheid (maand/periode).",
+      "Noteer 1 follow-up kanaal (sms/mail)."
+    ],
+    lex:[
+      ["prochaine fois","volgende keer"],
+      ["bientôt","binnenkort"],
+      ["se revoir","elkaar terugzien"]
+    ],
+    links:[],
+    pre:[
+      "Agenda/telefoon bij de hand.",
+      "1–2 ruwe periodes klaar.",
+      "Contactkanaal bevestigen."
+    ]
+  },
+
+  goodbye:{
+    targets:[
+      "Au revoir !",
+      "Bonne soirée !",
+      "Rentrez bien.",
+      "Salut ! (informeel)"
+    ],
+    tips:[
+      "‘Rentrez bien’ = vriendelijke wens voor veilige thuiskomst.",
+      "Bij informeel: ‘Salut !’ prima.",
+      "Hou het kort bij de deur (geen lange herstart)."
+    ],
+    prompts:[
+      "Wens fijne avond en veilige rit.",
+      "Bevestig dat alles is meegenomen (jas/telefoon).",
+      "Sluit af met glimlach en korte groet."
+    ],
+    lex:[
+      ["au revoir / salut","tot ziens / doei"],
+      ["bonne soirée","fijne avond"],
+      ["rentrer","thuiskomen"]
+    ],
+    links:[],
+    pre:[
+      "Controleer jassen/tassen/telefoons.",
+      "Licht aan buiten indien donker.",
+      "Houd deur/poort vrij."
+    ]
+  },
+
+  /* --- NIEUW: culinaire basis --- */
+  culinaire:{
+    targets:[
+      "Je vous sers l’entrée / le plat / le dessert.",
+      "Vous préférez de l’eau plate ou gazeuse ?",
+      "Il y a des allergies ou des préférences ?"
+    ],
+    tips:[
+      "Klassieke volgorde: entrée → plat → fromage (optioneel) → dessert → café/digestif.",
+      "Water op tafel: carafe d’eau is gebruikelijk en gratis.",
+      "Meld allergieën discreet vóór aanvang."
+    ],
+    prompts:[
+      "Vraag water/ wijnvoorkeuren (rouge/blanc/rosé).",
+      "Leg kort uit wat elk gerecht is.",
+      "Controleer of iemand vegetarisch/halal/glutenvrij eet."
+    ],
+    lex:[
+      ["entrée / plat / dessert","voorgerecht / hoofdgerecht / nagerecht"],
+      ["fromage / charcuterie","kaas / vleeswaren"],
+      ["carafe d’eau / gazeuse","karaf water / bruis"],
+      ["pain / panier à pain","brood / broodmand"],
+      ["couverts / assiette / verre","bestek / bord / glas"],
+      ["serviette","servet"],
+      ["allergie / intolérance","allergie / intolerantie"],
+      ["végétarien(ne) / sans porc","vegetarisch / zonder varkensvlees"],
+      ["digestif","sterke drank na het eten"]
+    ],
+    links:[],
+    pre:[
+      "Zet water en brood klaar; check glazen per drank.",
+      "Lijst ingrediënten bij de hand voor vragen.",
+      "Evt. kindergerecht of mild alternatief paraat."
+    ]
+  },
+
+  /* --- NIEUW: smalltalk & starters --- */
+  smalltalk:{
+    targets:[
+      "Vous habitez ici depuis longtemps ?",
+      "Vous êtes de la région ?",
+      "Vous avez des enfants / des animaux ?",
+      "Qu’est-ce que vous aimez faire le week-end ?",
+      "Pourquoi avez-vous choisi de vivre en France ?"
+    ],
+    tips:[
+      "Veilige onderwerpen: woonplaats, regio, weer, tuin, renovatie, markten, sport, cultuur.",
+      "Vermijd (zeker in het begin): politiek, geld, te persoonlijke zaken.",
+      "Antwoorden kort en positief; stel daarna een terugvraag."
+    ],
+    prompts:[
+      "Maak 1 zin over jezelf: vanwaar, sinds wanneer, waarom Frankrijk.",
+      "Bereid 3 vragen voor: région, famille/animaux, loisirs.",
+      "Gebruik bevestigende tussenwerpsels: Ah oui ? C’est sympa."
+    ],
+    lex:[
+      ["depuis / depuis quand","sinds / sinds wanneer"],
+      ["région / village","regio / dorp"],
+      ["enfants / animaux (chien/chat)","kinderen / huisdieren"],
+      ["travaux / rénovation","kluswerk / renovatie"],
+      ["jardin / potager / piscine","tuin / moestuin / zwembad"],
+      ["métier / à la retraite","beroep / met pensioen"],
+      ["loisirs / passe-temps","hobby’s / vrijetijd"]
+    ],
+    links:[],
+    pre:[
+      "Mini-pitch oefenen: Je viens de… J’habite ici depuis… Parce que….",
+      "Bedenk 1 vraag per gast (naam onthouden!).",
+      "Weerbericht/regio-feitje paraat (markt, evenement)."
+    ]
+  },
+
+  /* --- NIEUW: voorbereiding NL→FR --- */
+  etiquette:{
+    targets:[
+      "Nous arriverons vers [heure]. Est-ce que cela vous convient ?",
+      "Nous apporterons quelque chose (dessert/vin), si cela vous fait plaisir.",
+      "Merci pour l’invitation, nous confirmons notre venue."
+    ],
+    tips:[
+      "Aankomst: streef naar op tijd of een paar minuten speling (geen 15+ min te laat).",
+      "Cadeau: iets kleins (dessert, wijn, bloemen) is gebruikelijk; vermeld het luchtig.",
+      "Groet: handdruk of 1–2 bises afhankelijk van context; wacht het initiatief af."
+    ],
+    prompts:[
+      "Stuur een korte bevestiging met tijdstip en eventuele dieetinfo.",
+      "Bedenk 1 klein meebrengcadeau en kondig dat netjes aan.",
+      "Oefen je telefoonnummer in FR (vijf tweetallen) voor praktische afstemming."
+    ],
+    lex:[
+      ["à l’heure / en retard","op tijd / te laat"],
+      ["petite attention","klein presentje/aandacht"],
+      ["bises / poignée de main","zoen(tjes) / handdruk"],
+      ["RSVP / confirmation","graag reageren / bevestiging"],
+      ["tenue / décontracté(e)","kleding / informeel"]
+    ],
+    links:[{label:"Afkortingen",url:LEX.afk}],
+    pre:[
+      "Bevestig tijd, adres en parkeermogelijkheden.",
+      "Neem iets kleins mee (check allergieën).",
+      "Zet je navigatie op het juiste adres; check bereik."
+    ]
+  }
+};
+
+/* ===== UI wiring + 🔊 buttons met female-ish preset ===== */
+var selKey=null;
+var out, targets, tips, prompts, lex, pre, lexLink;
+
+function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+
+function addSpeakBtn(li, textProvider){
+  var btn=document.createElement('button');
+  btn.type='button'; btn.className='speak-btn'; btn.title='Uitspreken (FR)'; btn.textContent='🔊';
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var txt=(typeof textProvider==='function'? textProvider(): (li.textContent||'')).trim();
+    if(window.tts && txt){ window.tts.speak(txt, {lang:'fr-FR', rate:0.95, pitch:1.08}); }
+  });
+  li.appendChild(btn);
+}
+
+function render(key){
+  var d=BANK[key]; if(!d) return;
+  [targets,tips,prompts,lex,pre].forEach(clear);
+
+  d.targets.forEach(function(x){
+    var li=document.createElement('li');
+    li.textContent=x;
+    addSpeakBtn(li, ()=>x);                    // 🔊 hele zin (FR)
+    targets.appendChild(li);
+  });
+
+  d.tips.forEach(function(x){
+    var li=document.createElement('li');
+    li.textContent=x;
+    // tips zijn NL; meestal GEEN TTS nodig
+    tips.appendChild(li);
+  });
+
+  d.prompts.forEach(function(x){
+    var li=document.createElement('li');
+    li.textContent=x;                          // NL prompts, geen TTS
+    prompts.appendChild(li);
+  });
+
+  d.lex.forEach(function(x){
+    var li=document.createElement('li');
+    li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1];
+    addSpeakBtn(li, ()=>x[0]);                 // 🔊 spreek alleen Franse term
+    lex.appendChild(li);
+  });
+
+  var links=(d.links||[]).map(function(u){return '<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>';}).join(' · ');
+  lexLink.innerHTML = links;
+
+  d.pre.forEach(function(x){
+    var li=document.createElement('li');
+    li.textContent=x;                          // NL checklist
+    pre.appendChild(li);
+  });
+
+  out.style.display='block';
+  window.scrollTo(0, document.getElementById('app').offsetTop);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  out=document.getElementById('out');
+  targets=document.getElementById('targets');
+  tips=document.getElementById('tips');
+  prompts=document.getElementById('prompts');
+  lex=document.getElementById('lex');
+  pre=document.getElementById('pre');
+  lexLink=document.getElementById('lexLink');
 
   Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
     btn.addEventListener('click', function(){
@@ -477,23 +595,5 @@
     if(!selKey){ var note=document.getElementById('selNote'); if(note) note.textContent='(kies eerst een subrubriek)'; return; }
     render(selKey);
   });
-
-  function render(key){
-    var d=BANK[key]; if(!d) return;
-    [targets,tips,prompts,lex,pre].forEach(clear);
-
-    d.targets.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; targets.appendChild(li); });
-    d.tips.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
-    d.prompts.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
-    d.lex.forEach(function(x){ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
-
-    var links=(d.links||[]).map(function(u){return '<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>';}).join(' · ');
-    lexLink.innerHTML = links;
-
-    d.pre.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
-
-    out.style.display='block';
-    window.scrollTo(0, document.getElementById('app').offsetTop);
-  }
-})();
+});
 </script>
