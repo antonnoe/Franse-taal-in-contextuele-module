@@ -1,307 +1,46 @@
-<!doctype html><meta charset="utf-8">
-<title>Franse taal – contextuele module</title>
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Verhuisd naar TaalHulp</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- PWA manifest + icoontjes -->
-<link rel="manifest" href="./manifest.webmanifest">
-<meta name="theme-color" content="#800000">
-<link rel="icon" href="./icons/icon-192.png">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="1; url=https://taalhulp-fr.vercel.app/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --maroon:#800000;
-    --tile-bg:#f6f6f8;
-    --tile-bd:#e7e7ea;
-    --ink:#111;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:#fff;color:var(--ink);font:14.5px/1.55 Arial,Helvetica,sans-serif}
-  .wrap{max-width:1040px;margin:24px auto;padding:16px}
-  .panel{border:1px solid #eee;border-radius:14px;padding:14px 16px;background:#fff}
-  .hdr h1{margin:0 0 6px;color:var(--maroon);font-size:26px}
-  .searchrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .searchrow input{flex:1;min-width:260px;padding:10px;border:1px solid #ddd;border-radius:10px}
-  .btn{padding:10px 12px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer}
-  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-  .tile{
-    display:block;text-decoration:none;color:var(--ink);
-    background:var(--tile-bg);border:1px solid var(--tile-bd);border-radius:14px;
-    padding:14px 16px;box-shadow:0 1px 2px rgba(0,0,0,.04);
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-  }
-  .tile:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.08);border-color:#d7d7db}
-  .tile h3{margin:0 0 6px;font-size:18px;color:var(--maroon)}
-  .tile .sub{margin-top:8px;font-size:12.5px;color:#666}
-
-  /* Lexicon band (30% maroon, witte tekst) */
-  .lexband{
-    margin-top:16px;border-radius:14px;padding:14px 16px;
-    background:rgba(128,0,0,.30); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
-  }
-  .lexband h2{margin:0 0 8px;font-size:18px;color:#fff}
-  .lexband p{margin:0 0 8px}
-  .lexband a{color:#fff;font-weight:600;text-decoration:underline}
-  .lexband ul{margin:6px 0 0 18px;line-height:1.6}
-
-  /* App hint */
-  .apphint{
-    margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    border:1px dashed rgba(128,0,0,.35); border-radius:12px; padding:10px 12px; background:#fff6f6;
-  }
-  .apphint button{
-    border:1px solid var(--maroon); background:var(--maroon); color:#fff; border-radius:10px; padding:8px 10px; cursor:pointer;
-  }
-
-  /* Extra: weergave-toggle */
-  .viewtoggle{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-
-  /* Footer in #800000, leeg */
-  footer{margin-top:12px;font-size:12.5px;color:#800000}
-  footer a{color:#800000}
-
-  /* --- Responsief gedrag (mobiel) --- */
-  @media (max-width:520px){
-    .card-grid{ grid-template-columns: 1fr !important; }
-    .tile{ padding:16px 18px; border-radius:16px; }
-    .tile h3{ font-size:19px; }
-    .tile .sub{ font-size:13.5px; }
-    .searchrow input{ padding:12px; font-size:16px; }
-    .btn{ padding:12px 14px; font-size:15px; }
-  }
-  /* Forceer ‘mobiel’ ook op desktop */
-  body.mobile .card-grid{ grid-template-columns: 1fr !important; }
-  body.mobile .tile{ padding:16px 18px; border-radius:16px; }
-  body.mobile .tile h3{ font-size:19px; }
-  body.mobile .tile .sub{ font-size:13.5px; }
-  body.mobile .searchrow input{ padding:12px; font-size:16px; }
-  body.mobile .btn{ padding:12px 14px; font-size:15px; }
+body{margin:0;font-family:Mulish,Arial,sans-serif;color:#222;background:#fff;line-height:1.5}
+main{max-width:520px;margin:0 auto;padding:32px 16px}
+h1{color:#800000;font-size:1.4rem;margin:0 0 12px}
+a{color:#800000;font-weight:700}
 </style>
-
-<div class="wrap">
-  <!-- Header -->
-  <header class="panel hdr">
-    <h1>Franse taal – contextuele module</h1>
-    <p style="margin:4px 0 10px;">
-      Kies je <strong>hoofdrubriek</strong>, dan je <em>subrubriek/scenario</em>. Je krijgt:
-      <strong>Doelzinnen</strong>, <strong>Taaltips</strong>, <strong>Spreekprompts</strong>,
-      <strong>Micro-lexicon</strong> en <strong>Voorbereiden</strong>.
-      <span style="white-space:nowrap">Aanspreekvorm: <strong>vous</strong> (default).</span>
-    </p>
-
-    <!-- Zoeken -->
-    <div class="searchrow">
-      <input id="q" type="search" placeholder="Zoek op rubriek, subrubriek of woordenlijst…">
-      <button class="btn" type="button" onclick="document.getElementById('q').value='';filterCards();">Reset</button>
-    </div>
-
-    <!-- Weergave-toggle -->
-    <div class="viewtoggle">
-      <button id="toggleMobile" class="btn" type="button">Mobiele weergave: uit</button>
-      <small id="viewHint" style="color:#666">Tip: gebruik dit om op desktop de telefoonweergave te testen.</small>
-    </div>
-
-    <!-- App hint (OS-slim) -->
-    <div class="apphint">
-      <div style="flex:1;min-width:220px">
-        <strong>Op je telefoon gebruiken?</strong> Voeg deze pagina toe aan je beginscherm voor een app-ervaring.
-      </div>
-      <button type="button" class="installBtn">Op je beginscherm</button>
-      <div id="installHelp" style="display:none;color:#333;width:100%;margin-top:4px;font-size:13.5px;line-height:1.5;"></div>
-    </div>
-  </header>
-
-  <!-- Tegels / knoppen -->
-  <section id="cards" aria-label="Hoofdrubrieken" class="card-grid" style="margin-top:14px;">
-    <a class="tile card" data-tags="telefoon telefoongesprek afspraak rdv doorverbinden voicemail nummer dicteren" href="./rubriek-telefoongesprek.html">
-      <h3>Het telefoongesprek</h3>
-      <div style="color:#333">Openen, doorverbinden, gegevens dicteren, afspraak bevestigen, voicemail.</div>
-      <div class="sub">Sub: Opening & doorverbinden • Afspraak • Contactgegevens • Slecht bereik • Levering/technicus • Schade/klacht • Mairie bellen • Voicemail • <em>Telefoonnummer (spreek & check)</em></div>
-    </a>
-
-    <a class="tile card" data-tags="boodschappen bakker slager groenteboer poelier visboer supermarkt betalen carte espèces chèque" href="./rubriek-shopping.html">
-      <h3>Shopping</h3>
-      <div style="color:#333">Bakker, slager, groenteboer, poelier, visboer, supermarkt, betalen.</div>
-      <div class="sub">Sub: Boulangerie • Boucherie • Primeur • Poissonnier • Volailler • Supermarché • Betalen</div>
-    </a>
-
-    <a class="tile card" data-tags="bank rib incasso kaart limiet cheque virement paylib plafond" href="./rubriek-financieel.html">
-      <h3>Financieel (bank & betalen)</h3>
-      <div style="color:#333">Rekening openen, RIB, incasso’s, limieten, kaart/contactloos, problemen.</div>
-      <div class="sub">Sub: Rekening • RIB & incasso • Kaart/limiet • Cheque • Overboeking/Paylib • Kaart geweigerd</div>
-    </a>
-
-    <a class="tile card" data-tags="verzekering mrh rc internet box zwembad ongedierte aannemers devis" href="./rubriek-huishouden.html">
-      <h3>Huishouden & onderhoud</h3>
-      <div style="color:#333">MRH/RC, internet/box, zwembad, ongedierte, aannemers/leveranciers.</div>
-      <div class="sub">Sub: Verzekering MRH/RC • Internet/box • Zwembad • Ongedierte • Aannemers</div>
-    </a>
-
-    <a class="tile card" data-tags="mairie administratie justificatifs attestation rdv guichet formulier" href="./rubriek-mairie.html">
-      <h3>Mairie & administratie</h3>
-      <div style="color:#333">Justificatifs, attestation, RDV, formulieren, FranceConnect(+).</div>
-      <div class="sub">Sub: Document/attestation • RDV & justificatifs</div>
-    </a>
-
-    <a class="tile card" data-tags="gezondheid cpam carte vitale mutuelle huisarts apotheek ordonnance" href="./rubriek-gezondheid.html">
-      <h3>Gezondheidszorg</h3>
-      <div style="color:#333">CPAM/Carte Vitale, mutuelle, huisarts, apotheek.</div>
-      <div class="sub">Sub: Huisartsbezoek • Apotheek/ordonnance</div>
-    </a>
-
-    <a class="tile card" data-tags="huis kopen bezichtigen makelaar notaris compromis acte dpe diagnostics servitudes" href="./rubriek-wonen.html">
-      <h3>Wonen & vastgoed</h3>
-      <div style="color:#333">Bezichtigen, makelaar/notaris, DPE/diagnostics, servitudes/bornage.</div>
-      <div class="sub">Sub: Bezichtigen (vragenlijst) • Makelaar/Notaris & compromis</div>
-    </a>
-
-    <a class="tile card" data-tags="auto ants carte grise controle technique garage devis tol critair" href="./rubriek-auto.html">
-      <h3>Auto & mobiliteit</h3>
-      <div style="color:#333">Invoer/carte grise (ANTS), CT, garage/devis, tol/Crit’Air.</div>
-      <div class="sub">Sub: Carte grise (ANTS) • Contrôle technique</div>
-    </a>
-
-    <a class="tile card" data-tags="buren sociaal kennismaken bornage erfgrens uitnodigen" href="./rubriek-buren.html">
-      <h3>Buren & sociaal</h3>
-      <div style="color:#333">Kennismaken, erfgrenzen, kleine verzoeken, uitnodigen.</div>
-      <div class="sub">Sub: Kennismaken • Erfgrens/bornage</div>
-    </a>
-
-    <a class="tile card" data-tags="werk ondernemen sollicitatie cv micro-entreprise urssaf rc pro" href="./rubriek-werk.html">
-      <h3>Werk & ondernemen</h3>
-      <div style="color:#333">Sollicitatie, micro-entreprise, B&B/gîtes, facturen/URSSAF.</div>
-      <div class="sub">Sub: Sollicitatiegesprek • Micro-entreprise (opstart)</div>
-    </a>
-
-    <a class="tile card" data-tags="klussen doe-het-zelf bouwmarkt materiaal gereedschap maten lijm kit" href="./rubriek-klussen.html">
-      <h3>Klussen</h3>
-      <div style="color:#333">Bouwmarktgesprek, materialen, gereedschap, maten uitleggen.</div>
-      <div class="sub">Sub: Bouwmarktgesprek • Materialen & maten</div>
-    </a>
-
-    <a class="tile card" data-tags="post la poste aangetekend lr ar lre colissimo chronopost pakket relais consigne douane cn22 cn23 koerier dhl ups fedex claims" href="./rubriek-post.html">
-      <h3>Post &amp; goederentransport</h3>
-      <div style="color:#333">La Poste, aangetekend (LR/AR/LRE), pakketten (Colissimo/Chronopost), afhalen/relais, doorsturen, internationaal/douane, koeriers, claims.</div>
-      <div class="sub">Sub: Loket & basis • Aangetekend • Pakketten FR/EU • Afhalen/gemist • Doorsturen • Internationaal • Koeriers • Claims</div>
-    </a>
-
-    <a class="tile card" data-tags="correspondentie email e-mail brief onderwerp bijlage groet formule follow-up" href="./rubriek-correspondentie.html">
-      <h3>Correspondentie (e-mail)</h3>
-      <div style="color:#333">Snel e-mails opstellen: aanspreking, opening, verzoeken, afsluiting, onderwerp/bijlagen, follow-up.</div>
-      <div class="sub">Sub: Aanspreking • Openingszinnen • Inhoud & verzoeken • Afsluiten • Onderwerp & bijlagen • Follow-up • Toon • Voorbeeldblokken</div>
-    </a>
-
-    <a class="tile card" data-tags="bezoek uitnodigen diner aperitif tafel vous tu afscheid smalltalk culinaire etiquette" href="./rubriek-op-bezoek.html">
-      <h3>Op bezoek</h3>
-      <div style="color:#333">Uitnodigen, ontvangen, apéritif, aan tafel, smalltalk, vous/tu, bedanken, volgende keer, afscheid.</div>
-      <div class="sub">Sub: Uitnodiging • Welkom • Apéritif • Aan tafel • Conversatie • Vous/Tu • Bedanken • Volgende keer • Afscheid • Culinaire basis • Smalltalk • Etiquette</div>
-    </a>
-  </section>
-
-  <!-- Woordenlijsten band -->
-  <section class="lexband" aria-label="Woordenlijsten">
-    <h2>Woordenlijsten (open & downloadbaar)</h2>
-    <p>Openbare NL↔FR lijsten op Nederlanders.fr. Je kunt ze vanuit de browser opslaan/printen.</p>
-    <ul id="lexlist">
-      <li data-tags="medisch gezondheid apotheek huisarts ordonnance"><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-medische-termen-nederlands-frans" target="_blank" rel="noopener">Medische termen (NL↔FR)</a></li>
-      <li data-tags="garage auto controle technique devis"><a href="https://www.nederlanders.fr/profiles/blogs/begrippenlijst-bij-garagebezoek" target="_blank" rel="noopener">Garage / contrôle technique</a></li>
-      <li data-tags="it portalen franceconnect aanmelding wachtwoord"><a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" target="_blank" rel="noopener">IT / portalen / FranceConnect</a></li>
-      <li data-tags="afkortingen administratie mairie dossier"><a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" target="_blank" rel="noopener">Franse afkortingen</a></li>
-      <li data-tags="klussen gereedschap bouwmarkt zagen lijm kit"><a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" target="_blank" rel="noopener">Klussen / doe-het-zelf</a></li>
-      <li data-tags="overzicht alle lexicons lijsten"><a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" target="_blank" rel="noopener">Alle lexicons (overzicht)</a></li>
-    </ul>
-  </section>
-
-  <!-- Footer (leeg maar in juiste kleur) -->
-  <footer>&nbsp;</footer>
-</div>
-
+</head>
+<body>
+<main>
+<h1>Deze taalhulp is verhuisd naar TaalHulp</h1>
+<p>U wordt automatisch doorgestuurd. Gebeurt dat niet, open dan <a id="link" href="https://taalhulp-fr.vercel.app/">TaalHulp</a>.</p>
+</main>
 <script>
-  /* Zoekfilter */
-  function filterCards(){
-    var q=(document.getElementById('q').value||'').toLowerCase().trim();
-    var cards=document.querySelectorAll('.card');
-    cards.forEach(function(card){
-      var hay=(card.innerText+' '+(card.getAttribute('data-tags')||'')).toLowerCase();
-      card.style.display = hay.indexOf(q)>-1 ? 'block' : 'none';
-    });
-    var items=document.querySelectorAll('#lexlist > li');
-    items.forEach(function(li){
-      var hay=(li.innerText+' '+(li.getAttribute('data-tags')||'')).toLowerCase();
-      li.style.display = hay.indexOf(q)>-1 ? 'list-item' : 'none';
-    });
-  }
-  document.getElementById('q').addEventListener('input', filterCards);
-
-  /* Desktop/Mobiel toggle (ook via ?mobile=1) */
-  (function(){
-    var body=document.body, btn=document.getElementById('toggleMobile'), hint=document.getElementById('viewHint');
-    var params=new URLSearchParams(location.search);
-    if(params.has('mobile')) localStorage.setItem('nlfr_mobile_forced', params.get('mobile')==='1'?'1':'0');
-    var forced = localStorage.getItem('nlfr_mobile_forced')==='1';
-    if(forced) body.classList.add('mobile');
-    updateBtn();
-    btn.addEventListener('click', function(){
-      body.classList.toggle('mobile');
-      localStorage.setItem('nlfr_mobile_forced', body.classList.contains('mobile')?'1':'0');
-      updateBtn();
-    });
-    function updateBtn(){
-      var on=body.classList.contains('mobile');
-      btn.textContent='Mobiele weergave: '+(on?'aan':'uit');
-      if(hint) hint.style.opacity=on?.6:1;
+(function(){
+  var t="https://taalhulp-fr.vercel.app/";
+  var framed=false;
+  try{framed=window.self!==window.top;}catch(e){framed=true;}
+  if(framed){t+=(t.indexOf("?")>-1?"&":"?")+"embed=1";}
+  var l=document.getElementById("link");if(l){l.href=t;}
+  var done=false;
+  function go(){if(!done){done=true;location.replace(t);}}
+  setTimeout(go,800);
+  try{
+    var p=[];
+    if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations){
+      p.push(navigator.serviceWorker.getRegistrations().then(function(rs){
+        return Promise.all(rs.filter(function(r){return r.scope.indexOf(location.origin+"/Franse-taal-in-contextuele-module/")===0;}).map(function(r){return r.unregister();}));
+      }));
     }
-  })();
-
-  /* OS-slimme “Op je beginscherm” knop */
-  (function(){
-    const ua = navigator.userAgent.toLowerCase();
-    const isIOS = /iphone|ipad|ipod/.test(ua);
-    const isAndroid = /android/.test(ua);
-    const btn = document.querySelector('.apphint .installBtn');
-    const help = document.getElementById('installHelp');
-    let deferredPrompt = null;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      btn.style.display = 'inline-block';
-      btn.textContent = 'Installeren';
-      help.style.display='block';
-      help.innerHTML = '<div>Tip: hiermee krijg je een icoon en fullscreen weergave.</div>';
-    });
-
-    function showInstructions(){
-      help.style.display='block';
-      if (isIOS) {
-        help.innerHTML = '<div><strong>iPhone/iPad (Safari):</strong> Tik <em>Delen</em> ▸ <em>Zet op beginscherm</em>.</div>';
-      } else if (isAndroid && !deferredPrompt) {
-        help.innerHTML = '<div><strong>Android (Chrome):</strong> Menu ⋮ ▸ <em>Install app</em> of <em>Toevoegen aan startscherm</em>.</div>';
-      } else {
-        help.innerHTML = '<div>Gebruik de browseroptie <em>Toevoegen aan startscherm</em> / <em>Install</em>.</div>';
-      }
-    }
-
-    btn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        if (outcome !== 'accepted') showInstructions();
-      } else {
-        showInstructions();
-      }
-    });
-
-    // Toon knop sowieso
-    btn.style.display='inline-block';
-    btn.textContent = (isAndroid||isIOS) ? 'Op je beginscherm' : 'Op je beginscherm';
-  })();
+    if(window.caches&&caches.delete){p.push(caches.delete("nlfr-v1"));}
+    Promise.all(p).then(go,go);
+  }catch(e){go();}
+})();
 </script>
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
-  }
-</script>
-
-
+</body>
+</html>

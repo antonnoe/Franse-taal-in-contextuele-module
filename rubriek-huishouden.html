@@ -1,257 +1,46 @@
-<!doctype html><meta charset="utf-8">
-<title>Huishouden & onderhoud – NLFR Preflight</title>
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Verhuisd naar TaalHulp</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<div id="app" style="font-family:Arial,Helvetica,sans-serif;max-width:920px;margin:12px auto;padding:16px;border:1px solid #eee;border-radius:12px;line-height:1.55;color:#111;background:#fff;">
-  <h1 style="margin:0 0 8px;color:#800000">Huishouden & onderhoud</h1>
-
-  <!-- NAV -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px">
-    <a href="./index.html" style="text-decoration:none;border:1px solid #ddd;padding:8px 10px;border-radius:10px;color:#111;background:#fff">← Terug naar start</a>
-    <button type="button" onclick="(function(){document.getElementById('out').style.display='none'; window.scrollTo(0,document.getElementById('app').offsetTop);})()"
-            style="padding:8px 10px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer">Reset subrubriek</button>
-  </div>
-
-  <p style="margin:0 0 12px;">Kies je <strong>subrubriek</strong>. We tonen: Doelzinnen → Taaltips → Spreekprompts → Micro-lexicon → <strong>Voorbereiden</strong>. <strong>“Vous” is standaard.</strong></p>
-
-  <!-- SUBRUBRIEKEN ALS KNOPPEN -->
-  <div id="subs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0 12px;">
-    <button class="subbtn" data-key="assurance">Verzekering woning (MRH) & aansprakelijkheid (RC)</button>
-    <button class="subbtn" data-key="internet">Internet/box & mobiele telefonie</button>
-    <button class="subbtn" data-key="piscine">Zwembad (onderhoud & dienst)</button>
-    <button class="subbtn" data-key="nuisibles">Ongedierte (melding & bestrijding)</button>
-    <button class="subbtn" data-key="artisans">Aannemers/leveranciers (devis, planning, oplevering)</button>
-  </div>
-
-  <!-- Primair: “Toon” -->
-  <div style="margin:6px 0 12px;">
-    <button id="go" style="padding:9px 12px;border-radius:10px;border:1px solid #800000;background:#800000;color:#fff;cursor:pointer">Toon geselecteerde subrubriek</button>
-    <span id="selNote" style="margin-left:8px;color:#555;font-size:13px;">(nog geen selectie)</span>
-  </div>
-
-  <!-- OUTPUT -->
-  <div id="out" style="display:none">
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Doelzinnen</h2><ul id="targets" style="margin:6px 0 0 18px;"></ul>
-    </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Taaltips</h2><ul id="tips" style="margin:6px 0 0 18px;"></ul>
-    </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Spreekprompts</h2><ol id="prompts" style="margin:6px 0 0 18px;"></ol>
-    </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Micro-lexicon</h2><ul id="lex" style="margin:6px 0 0 18px;"></ul>
-      <div id="lexLink" style="font-size:13px;color:#555;margin-top:6px;"></div>
-    </section>
-    <section style="border:1px solid #eee;border-radius:10px;padding:10px;margin:10px 0;background:#fafafa;">
-      <h2 style="margin:0 0 6px;font-size:18px;">Voorbereiden</h2><ul id="pre" style="margin:6px 0 0 18px;"></ul>
-    </section>
-  </div>
-
-  <footer style="margin-top:8px;font-size:12.5px;color:#555;">
-    Lexicons: 
-    <a href="https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen" style="color:#800000;">IT/portalen (FranceConnect)</a> ·
-    <a href="https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk" style="color:#800000;">Klussen / doe-het-zelf</a> ·
-    <a href="https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen" style="color:#800000;">Franse afkortingen</a> ·
-    <a href="https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon" style="color:#800000;">Alle lexicons</a>.
-    <div style="margin-top:4px;">Taalcoaching: <a href="https://talenvoortalent.nl/" style="color:#800000;">talenvoortalent.nl</a> (Sylvain Lelarge)</div>
-  </footer>
-</div>
-
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="1; url=https://taalhulp-fr.vercel.app/?scenario=huishouden">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  .subbtn{padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#111;cursor:pointer;text-align:left}
-  .subbtn.active{border-color:#800000;box-shadow:0 0 0 2px rgba(128,0,0,0.12)}
+body{margin:0;font-family:Mulish,Arial,sans-serif;color:#222;background:#fff;line-height:1.5}
+main{max-width:520px;margin:0 auto;padding:32px 16px}
+h1{color:#800000;font-size:1.4rem;margin:0 0 12px}
+a{color:#800000;font-weight:700}
 </style>
-
+</head>
+<body>
+<main>
+<h1>Deze taalhulp is verhuisd naar TaalHulp</h1>
+<p>U wordt automatisch doorgestuurd. Gebeurt dat niet, open dan <a id="link" href="https://taalhulp-fr.vercel.app/?scenario=huishouden">TaalHulp</a>.</p>
+</main>
 <script>
 (function(){
-  var LEX={
-    tag:"https://www.nederlanders.fr/profiles/blog/list?tag=Lexicon",
-    it:"https://www.nederlanders.fr/profiles/blogs/lijst-van-it-begrippen",
-    afk:"https://www.nederlanders.fr/profiles/blogs/lijst-met-franse-afkortingen",
-    klus:"https://www.nederlanders.fr/profiles/blogs/woordenlijst-klussen-in-frankrijk"
-  };
-
-  var BANK={
-    assurance:{
-      targets:[
-        "Je souhaite assurer ma maison (MRH) et connaître les garanties.",
-        "Est-ce que la responsabilité civile est incluse ?",
-        "Comment déclarer un sinistre et quels sont les délais ?"
-      ],
-      tips:[
-        "‘MRH’ = multirisque habitation (opstal + inboedel varianten).",
-        "Vraag dekking (incendie, dégât des eaux, vol) en franchises.",
-        "Noteer ‘numéro de contrat’ en procedure voor sinistre."
-      ],
-      prompts:[
-        "Beschrijf type woning + gebruik (résidence principale/secondaire).",
-        "Vraag polisoverzicht en franchisebedragen.",
-        "Vraag stappen bij schade + noodnummer."
-      ],
-      lex:[
-        ["MRH (multirisque habitation)","woonverzekering"],["responsabilité civile (RC)","aansprakelijkheid"],
-        ["franchise","eigen risico"],["déclaration de sinistre","schademelding"],["attestation d’assurance","verzekeringsverklaring"]
-      ],
-      links:[{label:"Afkortingen",url:LEX.afk}],
-      pre:[
-        "Adres, type woning, oppervlakte, beveiliging paraat.",
-        "Bestaande polis (NL/FR) meenemen voor vergelijking.",
-        "Contact NL-talige adviseur mogelijk (bijv. cmunf.fr)."
-      ]
-    },
-
-    internet:{
-      targets:[
-        "Je voudrais souscrire un abonnement internet (fibre/ADSL).",
-        "Quel débit et quelles options (box TV, mobile) ?",
-        "Pouvez-vous planifier l’intervention du technicien ?"
-      ],
-      tips:[
-        "Controleer beschikbaarheid: fibre vs ADSL.",
-        "Vraag naar ‘débit descendant/montant’ en router (Box).",
-        "Noteer technicus-afspraak + toegang (code portail)."
-      ],
-      prompts:[
-        "Adres + naam vorige bewoner/ligne (indien bekend).",
-        "Vraag opties (TV, mobile bundel) en duur contract.",
-        "Plan technicus; vraag bevestiging per SMS/mail."
-      ],
-      lex:[
-        ["fibre/ADSL","glasvezel/koper"],["box/routeur","modem/router"],["débit (descendant/montant)","snelheid down/up"],
-        ["intervention du technicien","monteursbezoek"],["forfait","abonnement"],["résiliation","opzegging"]
-      ],
-      links:[{label:"IT/portalen",url:LEX.it},{label:"Afkortingen",url:LEX.afk}],
-      pre:[
-        "Controleer dekking (fibre/ADSL) op adres.",
-        "Toegangscode/poort/boîte de raccordement bekend.",
-        "Mobiel bereik/verbruik inschatten (bundelkeuze)."
-      ]
-    },
-
-    piscine:{
-      targets:[
-        "Je cherche un contrat d’entretien pour la piscine.",
-        "Pouvez-vous passer une fois par semaine / tous les 15 jours ?",
-        "J’ai besoin de produits et d’un contrôle du pH."
-      ],
-      tips:[
-        "Leg frequentie vast + taken (nettoyage, filtration, produits).",
-        "Vraag waterbalans (pH, chlore/sel) en winterplan.",
-        "Vraag naar noodnummer bij panne/fuite."
-      ],
-      prompts:[
-        "Bepaal frequentie en takenpakket.",
-        "Vraag prijs/maand en materialen inbegrepen of niet.",
-        "Plan eerste bezoek + checklist."
-      ],
-      lex:[
-        ["contrat d’entretien","onderhoudscontract"],["pH / chlore / sel","zuurgraad / chloor / zout"],
-        ["filtration / pompe","filter / pomp"],["fuite","lek"],["hivernage","overwintering"]
-      ],
-      links:[{label:"Klussen-lexicon",url:LEX.klus}],
-      pre:[
-        "Volume/afmetingen bassin + type (liner/beton).",
-        "Filter/pomp merk + laatste service.",
-        "Toegangstijden en veiligheid (barrière/couverture)."
-      ]
-    },
-
-    nuisibles:{
-      targets:[
-        "Nous avons un problème de nuisibles (fourmis/rongeurs/frelons).",
-        "Pourriez-vous intervenir et me proposer un devis ?",
-        "Quelles précautions à prendre après le traitement ?"
-      ],
-      tips:[
-        "Noem type plaag en locatie (cuisine/grenier/jardin).",
-        "Vraag preventie/afdichting na behandeling.",
-        "Vraag certificaat indien wettelijke plicht (frelons asiatiques)."
-      ],
-      prompts:[
-        "Leg situatie uit + eerste datum waarneming.",
-        "Vraag spoed/standaard interventie + devis.",
-        "Vraag veiligheidsadvies (huisdieren/kinderen)."
-      ],
-      lex:[
-        ["nuisibles","ongedierte"],["intervention","ingreep/uitruk"],["traitement","behandeling"],
-        ["devis","offerte"],["nid","nest"],["frelon (asiatique)","hoornaar (Aziatische)"]
-      ],
-      links:[{label:"Afkortingen",url:LEX.afk}],
-      pre:[
-        "Foto’s/sporen vastleggen (uitwerpselen, gangen, nest).",
-        "Toegang tot kruipruimte/zolder vrijmaken.",
-        "Na behandeling schoonmaakplan klaar."
-      ]
-    },
-
-    artisans:{
-      targets:[
-        "Je souhaite un devis pour [travaux] avec détail des matériaux et de la main d’œuvre.",
-        "Quel est le délai et le planning d’intervention ?",
-        "Pourriez-vous me fournir une facture détaillée à la fin ?"
-      ],
-      tips:[
-        "Vraag gespecificeerde ‘devis’ (uurtarief, materialen, TVA).",
-        "Plan milestones + voorschotten (‘acompte’).",
-        "Vraag ‘garantie décennale’ indien van toepassing."
-      ],
-      prompts:[
-        "Beschrijf werkzaamheden + locatie/foto’s.",
-        "Vraag referenties en verzekering (attestation).",
-        "Spreek oplevering, schoonmaak en betaling af."
-      ],
-      lex:[
-        ["devis","offerte"],["main d’œuvre","arbeid"],["acompte","voorschot"],["TVA","btw"],["garantie décennale","10-jaars garantie"]
-      ],
-      links:[{label:"Klussen-lexicon",url:LEX.klus},{label:"Afkortingen",url:LEX.afk}],
-      pre:[
-        "Foto’s/tekeningen + maten klaar.",
-        "Budgetrange en deadline bepalen.",
-        "Controle verzekeringsbewijs + SIRET."
-      ]
+  var t="https://taalhulp-fr.vercel.app/?scenario=huishouden";
+  var framed=false;
+  try{framed=window.self!==window.top;}catch(e){framed=true;}
+  if(framed){t+=(t.indexOf("?")>-1?"&":"?")+"embed=1";}
+  var l=document.getElementById("link");if(l){l.href=t;}
+  var done=false;
+  function go(){if(!done){done=true;location.replace(t);}}
+  setTimeout(go,800);
+  try{
+    var p=[];
+    if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations){
+      p.push(navigator.serviceWorker.getRegistrations().then(function(rs){
+        return Promise.all(rs.filter(function(r){return r.scope.indexOf(location.origin+"/Franse-taal-in-contextuele-module/")===0;}).map(function(r){return r.unregister();}));
+      }));
     }
-  };
-
-  // ----- UI wiring -----
-  var selKey=null;
-  var out=document.getElementById('out');
-  var targets=document.getElementById('targets'), tips=document.getElementById('tips'),
-      prompts=document.getElementById('prompts'), lex=document.getElementById('lex'),
-      pre=document.getElementById('pre'), lexLink=document.getElementById('lexLink');
-
-  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-
-  Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), function(btn){
-    btn.addEventListener('click', function(){
-      Array.prototype.forEach.call(document.querySelectorAll('.subbtn'), b=>b.classList.remove('active'));
-      this.classList.add('active'); selKey=this.getAttribute('data-key');
-      var note=document.getElementById('selNote'); if(note) note.textContent='geselecteerd: '+this.textContent;
-      render(selKey);
-    });
-  });
-
-  document.getElementById('go').addEventListener('click', function(){
-    if(!selKey){ var note=document.getElementById('selNote'); if(note) note.textContent='(kies eerst een subrubriek)'; return; }
-    render(selKey);
-  });
-
-  function render(key){
-    var d=BANK[key]; if(!d) return;
-    [targets,tips,prompts,lex,pre].forEach(clear);
-
-    d.targets.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; targets.appendChild(li); });
-    d.tips.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; tips.appendChild(li); });
-    d.prompts.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; prompts.appendChild(li); });
-    d.lex.forEach(x=>{ var li=document.createElement('li'); li.innerHTML='<strong>'+x[0]+'</strong> – '+x[1]; lex.appendChild(li); });
-
-    var links=(d.links||[]).map(u=>'<a href="'+u.url+'" style="color:#800000">'+u.label+'</a>').join(' · ');
-    lexLink.innerHTML = links;
-
-    d.pre.forEach(x=>{ var li=document.createElement('li'); li.textContent=x; pre.appendChild(li); });
-
-    out.style.display='block';
-    window.scrollTo(0, document.getElementById('app').offsetTop);
-  }
+    if(window.caches&&caches.delete){p.push(caches.delete("nlfr-v1"));}
+    Promise.all(p).then(go,go);
+  }catch(e){go();}
 })();
 </script>
+</body>
+</html>
